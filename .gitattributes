@@ -1,0 +1,5 @@
+# The records are written on Windows and read on a Linux runner, so pin the line ending
+# rather than leave it to whoever cloned last.
+* text=auto eol=lf
+*.parquet binary
+*.ipynb text eol=lf
