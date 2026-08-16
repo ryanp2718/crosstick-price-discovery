@@ -33,19 +33,30 @@ no Docker, no 1.5 GB feature cache.
 
 ## Run it
 
+Install [uv](https://docs.astral.sh/uv/), then:
+
 ```bash
-pip install -r requirements-dev.txt
-pytest -q                                                     # the published-pair gates
-jupyter lab notebooks/price-discovery.ipynb                   # read and re-run it
+uv sync --locked                                              # fetches Python 3.12 too
+uv run pytest -q                                              # the published-run gates
+uv run jupyter lab notebooks/price-discovery.ipynb            # read and re-run it
 ```
+
+`uv sync` reads `pyproject.toml` for what is required and `uv.lock` for the one exact
+resolution of it, down to transitive packages that carry no pin of their own. `--locked`
+fails rather than re-resolving, so you either get that environment or a clear error.
+There is nothing else to install: `.python-version` pins the interpreter and uv fetches
+it, so no system Python is involved.
 
 The notebook asserts its own headline numbers against the run records as it goes, so a
 number that drifts fails the notebook rather than quietly rendering. CI executes it top to
 bottom on a clean runner with no credentials and no platform running, which is what the
-reproduce badge tracks:
+reproduce badge tracks. It writes to a throwaway copy, since re-executing regenerates
+every execution count and every PNG and the committed notebook is the record:
 
 ```bash
-jupyter nbconvert --execute --inplace notebooks/price-discovery.ipynb
+uv run jupyter nbconvert --execute --to notebook \
+  --output-dir "$(mktemp -d)" --output executed.ipynb \
+  notebooks/price-discovery.ipynb
 ```
 
 ## What is in `data/`
@@ -75,7 +86,7 @@ crosstick[research] @ git+https://github.com/ryanp2718/crosstick@fb7a22d
 
 All three runs were recorded from a clean tree at that commit and carry the same feature
 builder (`8f96b676`), the same feature schema (`9c0eae5c`) and the same 20 silver source
-fingerprints. `tests/test_published_pair.py` asserts all of it, using crosstick's own
+fingerprints. `tests/test_published_runs.py` asserts all of it, using crosstick's own
 definition of what makes a placebo and a reverse run comparable rather than a restatement
 of it.
 

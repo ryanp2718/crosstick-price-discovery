@@ -25,16 +25,25 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: requirements-dev.txt
-      - run: pip install -r requirements-dev.txt
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      # No setup-python step: .python-version pins the interpreter and uv fetches it, so
+      # the version this job runs on is the one a reader gets locally rather than one
+      # named separately here and drifting from it.
+      #
+      # --locked refuses to re-resolve. If uv.lock disagrees with pyproject.toml the job
+      # fails instead of quietly installing some other resolution, which is the whole
+      # point of committing the lock: the stranger recomputes against the same scipy and
+      # the same matplotlib as the run that published the numbers, not merely the same
+      # version ranges.
+      - run: uv sync --locked
 
       # Provenance, the placebo gate, the direction asymmetry, and the headline numbers
       # recomputed from the rows rather than read back out of the record.
-      - run: pytest -q
+      - run: uv run pytest -q
 
       # Then the notebook itself, top to bottom. It asserts its own numbers against the
       # run records as it goes, so any drift raises and nbconvert exits non-zero. Output
@@ -43,7 +52,7 @@ jobs:
       # a number changing.
       - name: execute the notebook
         run: |
-          jupyter nbconvert --execute --to notebook \
+          uv run jupyter nbconvert --execute --to notebook \
             --ExecutePreprocessor.timeout=600 \
             --output-dir "$RUNNER_TEMP" --output executed.ipynb \
             notebooks/price-discovery.ipynb

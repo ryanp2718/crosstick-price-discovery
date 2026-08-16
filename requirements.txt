@@ -1,7 +1,0 @@
-# Pinned to the exact crosstick commit that wrote data/, so the code reading these files
-# is the code that produced them. The notebook imports research.runs, research.validation
-# and research.model only, none of which touch the lake, so nothing here needs credentials
-# or a running platform.
-crosstick[research] @ git+https://github.com/ryanp2718/crosstick@fb7a22d86f1f8d6019031ee0a3a8b4e14f2a8132#subdirectory=python
-
-matplotlib==3.11.1

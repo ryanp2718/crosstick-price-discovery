@@ -1,9 +1,0 @@
--r requirements.txt
-
-pytest==9.1.1
-
-# Running the notebook: nbconvert executes it headless (which is what CI does), jupyterlab
-# opens it, ipykernel is the kernel both drive.
-nbconvert==7.17.1
-ipykernel==7.3.0
-jupyterlab==4.6.3

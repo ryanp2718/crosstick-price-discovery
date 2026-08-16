@@ -1,0 +1,38 @@
+# This repo is an analysis, not a library. Nothing here is importable or published, so no
+# wheel is built for it (package = false below) and this file exists only to declare the
+# environment the notebook and tests run in. uv.lock beside it pins one exact resolution
+# of that environment, transitive packages included, which is the part a version range
+# cannot promise: crosstick pins its own numeric stack, but scipy, joblib, threadpoolctl
+# and matplotlib's tree all arrive as ranges, and a published number recomputed against a
+# different scipy is not the same recomputation.
+[project]
+name = "crosstick-price-discovery"
+version = "0.1.0"
+description = "Does one crypto exchange lead another, and by how much? BTC-USD on Coinbase and Kraken, out of sample."
+readme = "README.md"
+requires-python = ">=3.12"
+
+# Pinned to the exact crosstick commit that wrote data/, so the code reading these files
+# is the code that produced them. The notebook imports research.runs, research.validation
+# and research.model only, none of which touch the lake, so nothing here needs credentials
+# or a running platform.
+dependencies = [
+    "crosstick[research] @ git+https://github.com/ryanp2718/crosstick@fb7a22d86f1f8d6019031ee0a3a8b4e14f2a8132#subdirectory=python",
+    "matplotlib==3.11.1",
+]
+
+# Running the notebook: nbconvert executes it headless (which is what CI does), jupyterlab
+# opens it, ipykernel is the kernel both drive.
+[dependency-groups]
+dev = [
+    "pytest==9.1.1",
+    "nbconvert==7.17.1",
+    "ipykernel==7.3.0",
+    "jupyterlab==4.6.3",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
