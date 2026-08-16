@@ -12,6 +12,12 @@ description = "Does one crypto exchange lead another, and by how much? BTC-USD o
 readme = "README.md"
 requires-python = ">=3.12"
 
+# A PEP 639 SPDX expression naming the terms in LICENSE. Nothing is built from this file,
+# so no packaging step reads it; it is here so the terms are declared in the metadata and
+# not only in a file at the root, which is what tooling and readers look at.
+license = "MIT"
+license-files = ["LICENSE"]
+
 # Pinned to the exact crosstick commit that wrote data/, so the code reading these files
 # is the code that produced them. The notebook imports research.runs, research.validation
 # and research.model only, none of which touch the lake, so nothing here needs credentials
