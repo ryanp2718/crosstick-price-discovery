@@ -31,6 +31,19 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
       - run: pip install -r requirements-dev.txt
-      # Provenance, the placebo gate, and the headline numbers recomputed from the rows
-      # rather than read back out of the record.
+
+      # Provenance, the placebo gate, the direction asymmetry, and the headline numbers
+      # recomputed from the rows rather than read back out of the record.
       - run: pytest -q
+
+      # Then the notebook itself, top to bottom. It asserts its own numbers against the
+      # run records as it goes, so any drift raises and nbconvert exits non-zero. Output
+      # goes to a throwaway copy: re-executing regenerates every execution count and
+      # every PNG, so diffing the committed notebook would fail on noise rather than on
+      # a number changing.
+      - name: execute the notebook
+        run: |
+          jupyter nbconvert --execute --to notebook \
+            --ExecutePreprocessor.timeout=600 \
+            --output-dir "$RUNNER_TEMP" --output executed.ipynb \
+            notebooks/price-discovery.ipynb
