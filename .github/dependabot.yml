@@ -1,0 +1,32 @@
+version: 2
+updates:
+  # Python (uv). Dependabot reads uv.lock, so a bump arrives as a change to the
+  # committed resolution rather than to a version range, and the reproduce job
+  # recomputes every published number against it before the PR can merge.
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    groups:
+      python-minor:
+        update-types: ["minor", "patch"]
+    # The crosstick pin is provenance rather than a version to keep current: it
+    # names the commit that wrote data/. Bumping it would break the claim that
+    # the code reading these files is the code that produced them.
+    ignore:
+      - dependency-name: "crosstick"
+
+  # The workflow actions themselves. Dependabot reads the `# vN` comment beside
+  # each SHA pin and bumps both the SHA and the comment when a new tag ships.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions:
+        patterns: ["*"]
