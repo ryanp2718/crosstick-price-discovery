@@ -114,3 +114,56 @@ def test_the_real_headline_recomputes() -> None:
 def test_rows_match_the_record(tag: str) -> None:
     """The record counts rows it no longer carries, so the two can disagree."""
     assert len(oos(tag).y) == record(tag)["n_oos"]
+
+
+# ---- the freshness sweep ----------------------------------------------------------
+# The forecast is only evidence about Coinbase's flow if it is not instead reading a
+# Kraken book that had gone stale. Tightening the cut is the direct test of that, and it
+# is published as records rather than rows: six more prediction files would roughly
+# double this repo to support one robustness point.
+FRESHNESS = DATA / "freshness"
+CUTS = (200, 500, 1000)
+
+
+def sweep(venue: str, cut: int) -> dict:
+    return json.loads((FRESHNESS / f"record_{venue}_{cut}.json").read_text(encoding="utf-8"))
+
+
+def sweep_r2(venue: str, cut: int) -> list[float]:
+    return sweep(venue, cut)["pooled"]["gbt"]["r2_vs_zero"]
+
+
+@pytest.mark.parametrize("cut", CUTS)
+@pytest.mark.parametrize("venue", ("kraken", "coinbase"))
+def test_the_sweep_is_the_same_experiment(venue: str, cut: int) -> None:
+    """A different builder or a different vintage would make the sweep a different
+    experiment at each cut, which is exactly what it is meant to hold fixed."""
+    p, real = sweep(venue, cut)["provenance"], record("real")["provenance"]
+    assert not p["git_dirty"]
+    assert p["git_sha"] == real["git_sha"]
+    assert p["builder_fingerprint"] == real["builder_fingerprint"]
+    assert p["feature_schema_digest"] == real["feature_schema_digest"]
+    assert p["source_fingerprints"] == real["source_fingerprints"]
+
+
+@pytest.mark.parametrize("cut", CUTS)
+def test_the_sweep_varies_only_the_staleness_cut(cut: int) -> None:
+    forward, headline = sweep("kraken", cut)["spec"], record("real")["spec"]
+    differing = {f for f in EXPERIMENT if forward[f] != headline[f]}
+    assert differing == {"max_age_ms"}
+
+
+@pytest.mark.parametrize("cut", CUTS)
+def test_the_asymmetry_survives_every_cut(cut: int) -> None:
+    """At 200ms both books must be current within a fifth of a second, which costs 46%
+    of the bars. If the result were stale data read back, it would not survive that."""
+    forward, reverse = sweep_r2("kraken", cut), sweep_r2("coinbase", cut)
+    assert reverse[2] < forward[1], f"intervals overlap at {cut}ms"
+    assert forward[0] > 5 * reverse[0], f"asymmetry collapses at {cut}ms"
+
+
+def test_the_forward_result_is_flat_across_cuts() -> None:
+    """A 25x change in how fresh a book must be moves the headline by under a point of
+    R2. That is the claim the sweep exists to make."""
+    points = [sweep_r2("kraken", cut)[0] for cut in CUTS] + [REAL_R2[0]]
+    assert max(points) - min(points) < 0.005, f"forward R2 moves across cuts: {points}"

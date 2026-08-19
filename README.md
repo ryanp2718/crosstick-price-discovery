@@ -32,6 +32,11 @@ Run the same pipeline against a **target displaced by one hour** and it returns 
 asserts it still straddles zero, because a leakage-free pipeline is the only thing that
 makes the first number mean anything.
 
+A second control tightens the staleness cut instead of the target. Requiring both books to
+be current within **200ms** rather than five seconds costs 46% of the bars and moves the
+forward result from `0.1035` to `0.1028`, with the asymmetry intact at every cut in
+between. Whatever the model is reading, it is not a stale book being played back.
+
 Everything above regenerates from committed Parquet files. No database, no object store,
 no Docker, no 1.5 GB feature cache.
 
@@ -71,6 +76,7 @@ uv run jupyter nbconvert --execute --to notebook \
 | `oos_reverse.parquet` | 181,289 | the same, predicting Coinbase from Kraken |
 | `oos_placebo.parquet` | 166,040 | the same, from the displaced-target run |
 | `record_*.json` | | each run apart from its rows: spec, provenance, fold metrics, intervals, information shares |
+| `freshness/record_*.json` | | six more runs varying only the staleness cut, records only |
 
 One row per non-overlapping test bar, from the walk-forward's test folds only. That is
 enough to recompute every headline number: pooled R2, hit rate and gross edge with
