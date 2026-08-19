@@ -14,14 +14,18 @@ Two measures, one predictive and one structural, agree that Coinbase leads:
 | measure | value | what it says |
 | --- | --- | --- |
 | out-of-sample R2, Coinbase to Kraken, 5s horizon | **0.1035** [0.0908, 0.1120] | Coinbase order flow forecasts Kraken's next 5 seconds |
-| the same experiment reversed, Kraken to Coinbase | **0.0108** [0.0081, 0.0144] | the reverse direction is a tenth as strong, intervals disjoint |
-| Hasbrouck information share, Coinbase (1s bars) | **0.859** +/- 0.071 | Coinbase carries the permanent price innovation |
+| the same experiment reversed, Kraken to Coinbase | **0.0108** [0.0081, 0.0144] | paired on the 12 shared dates, dR2 **0.0927** [0.0785, 0.1026] |
+| Hasbrouck information share, Coinbase (1s bars) | bound **[0.720, 0.997]** | Coinbase carries the permanent price innovation |
 
 The forecast is cross-venue by construction: the model is given Kraken's forward return as
 its target and none of Kraken's own book or flow as input, so it shares no term with what
 it is predicting. The reverse run is the same 20 days, same bars, same feature builder and
-same folds, with only the direction changed, which is what rules out "Kraken is simply the
-slower book" as the explanation.
+same folds, with only the direction changed. That rules out the symmetric explanations, a
+shared latent factor or a pipeline leak, either of which would inflate both directions
+alike. It does not rule out "Kraken is simply the slower book": Kraken's mid moves on only
+21% of five-second bars against Coinbase's 59%, so that objection is a live one. Answering
+it takes the information share below, which asks which venue error-corrects toward the
+other rather than which one forecasts the other.
 
 Run the same pipeline against a **target displaced by one hour** and it returns R2
 `-0.0001` [-0.0003, 0.0001]. That null is committed alongside the real result and CI
