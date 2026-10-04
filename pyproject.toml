@@ -24,7 +24,7 @@ license-files = ["LICENSE"]
 # or a running platform.
 dependencies = [
     "crosstick[research] @ git+https://github.com/ryanp2718/crosstick@fb7a22d86f1f8d6019031ee0a3a8b4e14f2a8132#subdirectory=python",
-    "matplotlib==3.11.1",
+    "matplotlib==3.11.2",
 ]
 
 # Running the notebook: nbconvert executes it headless (which is what CI does), jupyterlab
@@ -33,8 +33,8 @@ dependencies = [
 dev = [
     "pytest==9.1.1",
     "nbconvert==7.17.1",
-    "ipykernel==7.3.0",
-    "jupyterlab==4.6.3",
+    "ipykernel==7.4.0",
+    "jupyterlab==4.6.4",
 ]
 
 [tool.uv]
