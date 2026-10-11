@@ -74,6 +74,8 @@ uv run jupyter nbconvert --execute --to notebook --output-dir "$(mktemp -d)" \
 | `record_*.json` | | each run apart from its rows: spec, provenance, fold metrics, intervals, information shares |
 | `freshness/record_*.json` | | six more runs varying only the staleness cut, records only |
 | `prices.parquet` | 1,529,334 | both venues' mid at every one-second bar the real run kept: `date`, `ts_ns`, `coinbase_mid`, `kraken_mid` |
+| `prices_retimed.parquet` | 547,482 | the same bars on other clocks, each venue at the exchange's own stamp and Kraken moved 20 to 200ms earlier, kept only where a series differs from `prices.parquet`: `date`, `ts_ns`, `series`, `mid` |
+| `clocks.json` | | each venue's delay from its own stamp to arrival, by day, and the test of what that stamp marks |
 
 The `oos_*` files hold one row per non-overlapping test bar, from the walk-forward's test
 folds only. That is enough to recompute every headline number: pooled R2, hit rate and
@@ -85,6 +87,10 @@ returns every published estimate at every stride, which the tests assert. It was
 from crosstick's local feature cache by `scripts/export_prices.py`, picking each date's
 cache entry by the source and builder fingerprints in the real run's record, and it
 carries those fingerprints in its own metadata.
+
+`prices_retimed.parquet` and `clocks.json` were read from crosstick's lake by
+`scripts/extract_clocks.py` and written by `scripts/export_clocks.py`, which refuses to write
+unless the arrival clock, rebuilt from the same tables, equals `prices.parquet` bit for bit.
 
 ## How the numbers were produced
 

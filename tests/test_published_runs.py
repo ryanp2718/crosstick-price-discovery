@@ -205,3 +205,40 @@ def test_the_prices_reproduce_the_published_information_shares() -> None:
             assert got.n == want["n"], where
             assert got.alpha == pytest.approx(want["alpha"], rel=1e-9), where
             assert got.bounds.ravel() == pytest.approx(np.ravel(want["bounds"]), abs=1e-9), where
+
+
+# ---- the other clocks -------------------------------------------------------------
+# The same bars timed otherwise, read off crosstick's lake by `scripts/extract_clocks.py`.
+# The export already held the rebuilt arrival clock to `prices.parquet` bit for bit, which
+# needs the lake. What the files alone can show is that every re-timed row sits on a
+# published bar and changes it, so a series is the published panel with these rows swapped
+# in, and that the clock report covers every date of the run.
+RETIMED = DATA / "prices_retimed.parquet"
+CLOCKS = DATA / "clocks.json"
+
+
+def test_the_retimed_prices_sit_on_the_published_bars() -> None:
+    carried = json.loads(pq.read_schema(RETIMED).metadata[b"crosstick"])
+    real = record("real")
+    assert carried["source_record"] == "record_real.json"
+    assert carried["git_sha"] == real["provenance"]["git_sha"]
+    assert carried["dates"] == real["spec"]["dates"]
+
+    retimed = pl.read_parquet(RETIMED)
+    assert set(retimed["series"].unique()) == set(carried["series"])
+    assert not retimed.select("series", "ts_ns").is_duplicated().any()
+    joined = retimed.join(pl.read_parquet(PRICES), on=["date", "ts_ns"], how="left")
+    assert joined["coinbase_mid"].null_count() == 0, "a re-timed row is not a published bar"
+    venue_mid = pl.when(pl.col("series").str.starts_with("coinbase"))
+    published = venue_mid.then(pl.col("coinbase_mid")).otherwise(pl.col("kraken_mid"))
+    assert joined.filter(pl.col("mid") == published).is_empty(), "a re-timed row changes nothing"
+
+
+def test_the_clock_report_covers_every_date() -> None:
+    report = json.loads(CLOCKS.read_text(encoding="utf-8"))
+    dates = record("real")["spec"]["dates"]
+    assert report["source_record"] == "record_real.json"
+    for venue in ("coinbase", "kraken"):
+        assert sorted(report["venues"][venue]) == dates, venue
+        for day in report["venues"][venue].values():
+            assert day["stamp_test"]["matched"] > 0 and day["book_updates"] > 0
