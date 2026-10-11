@@ -7,7 +7,8 @@
 BTC-USD on Coinbase and Kraken over 20 days of self-captured level-2 data, and it commits
 the out-of-sample predictions so the answer can be checked rather than taken on trust.
 
-[**Read the notebook**](notebooks/price-discovery.ipynb) (renders on GitHub, no setup).
+[**Read the essay**](notebooks/price-discovery.ipynb), and the [appendix](notebooks/appendix.ipynb)
+for the checks behind it (both render on GitHub, no setup).
 
 Two measures, one predictive and one structural, agree that Coinbase leads:
 
@@ -23,9 +24,7 @@ it is predicting. The reverse run is the same 20 days, same bars, same feature b
 same folds, with only the direction changed. That rules out the symmetric explanations, a
 shared latent factor or a pipeline leak, either of which would inflate both directions
 alike. It does not rule out "Kraken is simply the slower book": Kraken's mid moves on only
-21% of five-second bars against Coinbase's 59%, so that objection is a live one. Answering
-it takes the information share below, which asks which venue error-corrects toward the
-other rather than which one forecasts the other.
+21% of five-second bars against Coinbase's 59%, so that objection is a live one.
 
 Run the same pipeline against a **target displaced by one hour** and it returns R2
 `-0.0001` [-0.0003, 0.0001]. That null is committed alongside the real result and CI
@@ -47,7 +46,7 @@ Install [uv](https://docs.astral.sh/uv/), then:
 ```bash
 uv sync --locked                                              # fetches Python 3.12 too
 uv run pytest -q                                              # the published-run gates
-uv run jupyter lab notebooks/price-discovery.ipynb            # read and re-run it
+uv run jupyter lab notebooks/                                 # read and re-run both
 ```
 
 `uv sync` reads `pyproject.toml` for what is required and `uv.lock` for the one exact
@@ -56,16 +55,16 @@ fails rather than re-resolving, so you either get that environment or a clear er
 There is nothing else to install: `.python-version` pins the interpreter and uv fetches
 it, so no system Python is involved.
 
-The notebook asserts its own headline numbers against the run records as it goes, so a
-number that drifts fails the notebook rather than quietly rendering. CI executes it top to
-bottom on a clean runner with no credentials and no platform running, which is what the
-reproduce badge tracks. It writes to a throwaway copy, since re-executing regenerates
-every execution count and every PNG and the committed notebook is the record:
+Both notebooks assert the numbers their text quotes as they go, and the appendix recomputes
+every published number against the run records, so a number that drifts fails the notebook
+rather than quietly rendering. CI executes both top to bottom on a clean runner with no
+credentials and no platform running, which is what the reproduce badge tracks. It writes to
+throwaway copies, since re-executing regenerates every execution count and every PNG and
+the committed notebooks are the record:
 
 ```bash
-uv run jupyter nbconvert --execute --to notebook \
-  --output-dir "$(mktemp -d)" --output executed.ipynb \
-  notebooks/price-discovery.ipynb
+uv run jupyter nbconvert --execute --to notebook --output-dir "$(mktemp -d)" \
+  notebooks/price-discovery.ipynb notebooks/appendix.ipynb
 ```
 
 ## What is in `data/`
@@ -123,9 +122,10 @@ a 5-second edge measured on a captured tape is not a 5-second edge measured thro
 order gateway. Selectivity is reported at forced coverage to show where the signal
 concentrates, not to propose a strategy.
 
-Gonzalo-Granger component shares are computed and deliberately not quoted. Under the
-conditioning of this VECM they leave the unit interval on 6 of 20 dates, which is a known
-failure mode of the measure; Hasbrouck bounds are unaffected and are the number cited
-above.
+Gonzalo-Granger component shares are computed but not headlined. Coinbase's share is
+Kraken's error-correction speed divided by the two venues' speeds combined, and Coinbase's
+speed is small (about 1/21 of Kraken's) with day-to-day noise larger than itself. On the 6
+days its estimate points fractionally away from Kraken, the daily share exceeds 1. Averaged
+over the 20 days it is 0.965, pointing the same way as the Hasbrouck bounds above.
 
 The window is 20 days of one instrument on two venues. It is a measurement, not a law.
