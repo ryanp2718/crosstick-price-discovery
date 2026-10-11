@@ -5,36 +5,33 @@
 
 **Does one crypto exchange lead another, and by how much?** This repo answers that for
 BTC-USD on Coinbase and Kraken over 20 days of self-captured level-2 data, and it commits
-the out-of-sample predictions so the answer can be checked rather than taken on trust.
+the out-of-sample predictions and the prices so the answer can be checked rather than taken
+on trust.
 
 [**Read the essay**](notebooks/price-discovery.ipynb), and the [appendix](notebooks/appendix.ipynb)
 for the checks behind it (both render on GitHub, no setup).
 
-Two measures, one predictive and one structural, agree that Coinbase leads:
+Three measurements agree that Coinbase leads, in the sense that its price moves first and
+Kraken's follows:
 
 | measure | value | what it says |
 | --- | --- | --- |
-| out-of-sample R2, Coinbase to Kraken, 5s horizon | **0.1035** [0.0908, 0.1120] | Coinbase order flow forecasts Kraken's next 5 seconds |
+| Kraken's move in the 10s after a Coinbase jump of 2bp or more | **91%** of Coinbase's (69% to 96% by day) | Kraken catches up to Coinbase's jumps |
+| out-of-sample R2, Coinbase to Kraken, 5s horizon | **0.1035** [0.0908, 0.1120] | Coinbase's order book forecasts Kraken's next 5 seconds |
 | the same experiment reversed, Kraken to Coinbase | **0.0108** [0.0081, 0.0144] | paired on the 12 shared dates, dR2 **0.0927** [0.0785, 0.1026] |
-| Hasbrouck information share, Coinbase (1s bars) | bound **[0.720, 0.997]** | Coinbase carries the permanent price innovation |
+| Hasbrouck information share, Coinbase (1s bars) | bounds **[0.720, 0.997]** | most of the lasting price change starts at Coinbase |
 
-The forecast is cross-venue by construction: the model is given Kraken's forward return as
-its target and none of Kraken's own book or flow as input, so it shares no term with what
-it is predicting. The reverse run is the same 20 days, same bars, same feature builder and
-same folds, with only the direction changed. That rules out the symmetric explanations, a
-shared latent factor or a pipeline leak, either of which would inflate both directions
-alike. It does not rule out "Kraken is simply the slower book": Kraken's mid moves on only
-21% of five-second bars against Coinbase's 59%, so that objection is a live one.
+Why Coinbase moves first, whether news reaches its traders first or Kraken is slower to
+update its quotes, is a separate question that prices alone cannot answer. And the forecast
+is of the mid-price, before fees, the spread or fills, so it is not a trading result.
 
-Run the same pipeline against a **target displaced by one hour** and it returns R2
-`-0.0001` [-0.0003, 0.0001]. That null is committed alongside the real result and CI
-asserts it still straddles zero, because a leakage-free pipeline is the only thing that
-makes the first number mean anything.
-
-A second control tightens the staleness cut instead of the target. Requiring both books to
-be current within **200ms** rather than five seconds costs 46% of the bars and moves the
-forward result from `0.1035` to `0.1028`, with the asymmetry intact at every cut in
-between. Whatever the model is reading, it is not a stale book being played back.
+The forecast sees none of Kraken's own book or flow, so it shares no term with what it
+predicts. Two controls test it. With the target displaced by an hour, the same pipeline
+returns R2 `-0.0001` [-0.0003, 0.0001], and CI asserts it still straddles zero. Requiring
+both books to be current within **200ms** rather than five seconds keeps 54% of the bars
+and moves the forward result from `0.1035` to `0.1028`, with the asymmetry intact at every
+cut in between. The [appendix](notebooks/appendix.ipynb) has both in full, with the rest of
+the checks.
 
 Everything above regenerates from committed Parquet files. No database, no object store,
 no Docker, no 1.5 GB feature cache.
@@ -113,19 +110,3 @@ bars ahead. Walk forward with an 8-day minimum train and 3-day test blocks, 4 fo
 shuffling, an embargo at every boundary and early stopping on its own embargoed slice.
 Intervals are date-block bootstraps over the 12 test dates, because adjacent seconds are
 not independent draws.
-
-## What this does not claim
-
-The R2 is a forecast of mid-price return, not a trading result. `gross_bps_per_trade` is
-gross by name: no fees, no slippage, no queue position, and no allowance for the fact that
-a 5-second edge measured on a captured tape is not a 5-second edge measured through a real
-order gateway. Selectivity is reported at forced coverage to show where the signal
-concentrates, not to propose a strategy.
-
-Gonzalo-Granger component shares are computed but not headlined. Coinbase's share is
-Kraken's error-correction speed divided by the two venues' speeds combined, and Coinbase's
-speed is small (about 1/21 of Kraken's) with day-to-day noise larger than itself. On the 6
-days its estimate points fractionally away from Kraken, the daily share exceeds 1. Averaged
-over the 20 days it is 0.965, pointing the same way as the Hasbrouck bounds above.
-
-The window is 20 days of one instrument on two venues. It is a measurement, not a law.
