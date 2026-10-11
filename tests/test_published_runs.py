@@ -20,9 +20,12 @@ back would only prove the record is a file.
 import json
 from pathlib import Path
 
+import numpy as np
 import polars as pl
+import pyarrow.parquet as pq
 import pytest
 from research.export import EXPERIMENT
+from research.infoshare import information_shares
 from research.runs import read_oos
 from research.validation import confidence_intervals
 
@@ -167,3 +170,38 @@ def test_the_forward_result_is_flat_across_cuts() -> None:
     R2. That is the claim the sweep exists to make."""
     points = [sweep_r2("kraken", cut)[0] for cut in CUTS] + [REAL_R2[0]]
     assert max(points) - min(points) < 0.005, f"forward R2 moves across cuts: {points}"
+
+
+# ---- the price panel --------------------------------------------------------------
+# Both venues' mids at every one-second bar the real run's VECM was fitted on, exported
+# from the feature cache by `scripts/export_prices.py`. A price file could be any prices,
+# so it is held to the run twice: by the provenance it carries, and by refitting the
+# information shares from it and getting the published estimates back.
+PRICES = DATA / "prices.parquet"
+
+
+def test_the_prices_are_the_real_runs_rows() -> None:
+    carried = json.loads(pq.read_schema(PRICES).metadata[b"crosstick"])
+    real = record("real")
+    assert carried["source_record"] == "record_real.json"
+    for field in ("git_sha", "builder_fingerprint", "source_fingerprints"):
+        assert carried[field] == real["provenance"][field], field
+    assert carried["target"] == real["spec"]["target"]
+    assert carried["max_age_ms"] == real["spec"]["max_age_ms"]
+    assert pl.read_parquet(PRICES).height == real["n_rows"]
+
+
+def test_the_prices_reproduce_the_published_information_shares() -> None:
+    """Every date at every stride, refitted with crosstick's own estimator."""
+    real = record("real")
+    venues = tuple(real["spec"]["infoshare_venues"])
+    prices = pl.read_parquet(PRICES)
+    for block in real["infoshare"]:
+        for want in block["estimates"]:
+            day = prices.filter(pl.col("date") == want["date"]).sort("ts_ns")
+            panel = np.log(day.select([f"{v}_mid" for v in venues]).to_numpy())
+            got = information_shares(panel[:: block["stride"]], venues, block["lags"])
+            where = f"{want['date']} at {block['stride']}s"
+            assert got.n == want["n"], where
+            assert got.alpha == pytest.approx(want["alpha"], rel=1e-9), where
+            assert got.bounds.ravel() == pytest.approx(np.ravel(want["bounds"]), abs=1e-9), where

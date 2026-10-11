@@ -77,11 +77,18 @@ uv run jupyter nbconvert --execute --to notebook \
 | `oos_placebo.parquet` | 166,040 | the same, from the displaced-target run |
 | `record_*.json` | | each run apart from its rows: spec, provenance, fold metrics, intervals, information shares |
 | `freshness/record_*.json` | | six more runs varying only the staleness cut, records only |
+| `prices.parquet` | 1,529,334 | both venues' mid at every one-second bar the real run kept: `date`, `ts_ns`, `coinbase_mid`, `kraken_mid` |
 
-One row per non-overlapping test bar, from the walk-forward's test folds only. That is
-enough to recompute every headline number: pooled R2, hit rate and gross edge with
-date-block bootstrap intervals, dead-zone precision, and the full coverage-matched
-selectivity curve. Training rows are not published and are not needed.
+The `oos_*` files hold one row per non-overlapping test bar, from the walk-forward's test
+folds only. That is enough to recompute every headline number: pooled R2, hit rate and
+gross edge with date-block bootstrap intervals, dead-zone precision, and the full
+coverage-matched selectivity curve. Training rows are not published and are not needed.
+
+`prices.parquet` is what the information shares were fitted on, and refitting them from it
+returns every published estimate at every stride, which the tests assert. It was exported
+from crosstick's local feature cache by `scripts/export_prices.py`, picking each date's
+cache entry by the source and builder fingerprints in the real run's record, and it
+carries those fingerprints in its own metadata.
 
 ## How the numbers were produced
 
