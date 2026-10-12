@@ -19,7 +19,7 @@ Kraken's follows:
 | Kraken's move in the 10s after a Coinbase jump of 2bp or more | **91%** of Coinbase's (69% to 96% by day) | Kraken catches up to Coinbase's jumps |
 | out-of-sample R2, Coinbase to Kraken, 5s horizon | **0.1035** [0.0908, 0.1120] | Coinbase's order book forecasts Kraken's next 5 seconds |
 | the same experiment reversed, Kraken to Coinbase | **0.0108** [0.0081, 0.0144] | paired on the 12 shared dates, dR2 **0.0927** [0.0785, 0.1026] |
-| Hasbrouck information share, Coinbase (1s bars) | bounds **[0.720, 0.997]** | most of the lasting price change starts at Coinbase |
+| Hasbrouck information share, Coinbase (1s bars) | bounds **[0.754, 0.997]** | most of the lasting price change starts at Coinbase |
 
 Why Coinbase moves first, whether news reaches its traders first or Kraken is slower to
 update its quotes, is a separate question that prices alone cannot answer. And the forecast
@@ -53,11 +53,11 @@ There is nothing else to install: `.python-version` pins the interpreter and uv 
 it, so no system Python is involved.
 
 Both notebooks assert the numbers their text quotes as they go, and the appendix recomputes
-every published number against the run records, so a number that drifts fails the notebook
-rather than quietly rendering. CI executes both top to bottom on a clean runner with no
-credentials and no platform running, which is what the reproduce badge tracks. It writes to
-throwaway copies, since re-executing regenerates every execution count and every PNG and
-the committed notebooks are the record:
+every number in the run records, so a number that drifts fails the notebook rather than
+quietly rendering. CI executes both top to bottom on a clean runner with no credentials and no
+platform running, which is what the reproduce badge tracks. It writes to throwaway copies,
+since re-executing regenerates every execution count and every PNG and the committed notebooks
+are the record:
 
 ```bash
 uv run jupyter nbconvert --execute --to notebook --output-dir "$(mktemp -d)" \
@@ -82,11 +82,16 @@ folds only. That is enough to recompute every headline number: pooled R2, hit ra
 gross edge with date-block bootstrap intervals, dead-zone precision, and the full
 coverage-matched selectivity curve. Training rows are not published and are not needed.
 
-`prices.parquet` is what the information shares were fitted on, and refitting them from it
-returns every published estimate at every stride, which the tests assert. It was exported
-from crosstick's local feature cache by `scripts/export_prices.py`, picking each date's
-cache entry by the source and builder fingerprints in the real run's record, and it
-carries those fingerprints in its own metadata.
+`prices.parquet` is what the run's information shares were fitted on. It was exported from
+crosstick's local feature cache by `scripts/export_prices.py`, picking each date's cache entry
+by the source and builder fingerprints in the real run's record, and it carries those
+fingerprints in its own metadata. Refitting with crosstick's estimator returns every estimate
+in the record at every stride, which the tests assert.
+
+That estimator fits straight across holes in the recording, as if the prices on either side
+were one second apart. The essay and the appendix skip those steps instead, which moves the
+one-second bounds from the record's [0.720, 0.997] to [0.754, 0.997], and the appendix shows
+both.
 
 `prices_retimed.parquet` and `clocks.json` were read from crosstick's lake by
 `scripts/extract_clocks.py` and written by `scripts/export_clocks.py`, which refuses to write
@@ -115,4 +120,5 @@ point-in-time from the predicting venue only. Target is the predicted venue's mi
 bars ahead. Walk forward with an 8-day minimum train and 3-day test blocks, 4 folds, no
 shuffling, an embargo at every boundary and early stopping on its own embargoed slice.
 Intervals are date-block bootstraps over the 12 test dates, because adjacent seconds are
-not independent draws.
+not independent draws. The information share is fitted on each day's one-second prices
+separately, using only the seconds whose ten seconds before have no hole in the recording.
