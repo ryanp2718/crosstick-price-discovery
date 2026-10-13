@@ -39,6 +39,11 @@ VENUES = {"coinbase": "BTC-USD", "kraken": "BTC-USD"}
 # Kraken sampled this long after each bar closes on the arrival clock: as if each of its
 # updates had happened that much earlier than it reached us.
 SHIFTS_MS = (20, 40, 60, 80, 100, 150, 200)
+# crosstick stores a Coinbase trade's side as the side of the resting order it filled, and
+# every other venue's as the side that took liquidity, so Coinbase's is flipped here. The
+# quote test holds the correction to the book on every day: a taker buy pays the ask, so most
+# of the trades taken as buys should print above the mid, and most sells below it.
+MAKER_SIDE = {"coinbase"}
 NS = 1_000_000_000
 MS = 1_000_000
 
@@ -56,7 +61,28 @@ def _take(column: pa.ChunkedArray, index: np.ndarray) -> pa.Array:
     return pc.take(column, pa.array(index, mask=index < 0))
 
 
-def _stamp_test(s, bid, ask, trades) -> dict:
+def _taker(venue: str, trades: pa.Table) -> np.ndarray:
+    """Each trade's taker side, "bid" for a buy and "ask" for a sell."""
+    side = np.asarray(trades["side"].to_pylist())
+    if venue in MAKER_SIDE:
+        side = np.where(side == "bid", "ask", np.where(side == "ask", "bid", side))
+    return side
+
+
+def _quote_test(arrival, bid, ask, trades, taker) -> dict:
+    """How often a trade taken as a buy printed above the mid of the book that had arrived
+    before it, and a sell below it."""
+    i = _asof(arrival, trades["ts_ns"].to_numpy())
+    ok = i >= 0
+    mid = (bid[i[ok]] + ask[i[ok]]) / 2
+    price = pc.cast(trades["price"], pa.float64(), safe=False).to_numpy()[ok]
+    return {
+        "buys_above_mid": float((price > mid)[taker[ok] == "bid"].mean()),
+        "sells_below_mid": float((price < mid)[taker[ok] == "ask"].mean()),
+    }
+
+
+def _stamp_test(s, bid, ask, trades, taker) -> dict:
     """Where does a book update's stamp sit against the trade that caused it?
 
     A taker buy that takes out the best ask moves the ask up, and a taker sell that takes
@@ -68,7 +94,7 @@ def _stamp_test(s, bid, ask, trades) -> dict:
     """
     tt = trades["exchange_ts_ns"].to_numpy()
     tp = pc.cast(trades["price"], pa.float64(), safe=False).to_numpy()
-    side = np.asarray(trades["side"].to_pylist())
+    side = taker
     order = np.argsort(tt, kind="stable")
     tt, tp, side = tt[order], tp[order], side[order]
     gaps = []
@@ -165,12 +191,16 @@ def main(out: Path, dates: list[str]) -> None:
                 (trades["ts_ns"].to_numpy() - trades["exchange_ts_ns"].to_numpy()) / MS
             )
             entry["trades"] = trades.num_rows
+            taker = _taker(venue, trades)
+            bid = pc.cast(book["best_bid"], pa.float64(), safe=False).to_numpy()
+            ask = pc.cast(book["best_ask"], pa.float64(), safe=False).to_numpy()
+            entry["quote_test"] = _quote_test(
+                on_arrival, bid[by_arrival], ask[by_arrival], trades, taker
+            )
+            assert min(entry["quote_test"].values()) > 0.5, (date, venue, entry["quote_test"])
             on_stamp = np.flatnonzero(delta)[np.argsort(stamp[delta], kind="stable")]
             entry["stamp_test"] = _stamp_test(
-                stamp[on_stamp],
-                pc.cast(book["best_bid"], pa.float64(), safe=False).to_numpy()[on_stamp],
-                pc.cast(book["best_ask"], pa.float64(), safe=False).to_numpy()[on_stamp],
-                trades,
+                stamp[on_stamp], bid[on_stamp], ask[on_stamp], trades, taker
             )
             print(f"{date} {venue:9s} book delay p50 {entry['book_delay_ms']['p50']:5.1f} ms, "
                   f"stamp equal to its trade's in {entry['stamp_test']['equal']:,} of "
