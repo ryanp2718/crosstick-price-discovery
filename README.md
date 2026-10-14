@@ -21,6 +21,10 @@ Kraken's follows:
 | the same experiment reversed, Kraken to Coinbase | **0.0108** [0.0081, 0.0144] | paired on the 12 shared dates, dR2 **0.0927** [0.0785, 0.1026] |
 | Hasbrouck information share, Coinbase (1s bars) | bounds **[0.754, 0.997]** | most of the lasting price change starts at Coinbase |
 
+Inside the jump second the order holds. Of the 7,438 seconds in which both prices jumped the
+same way, Coinbase's crossed 1bp first in **69%**, a median **63ms** ahead of Kraken's; on the
+exchanges' own stamps, the clock least favourable to Coinbase, **54%** and **14ms**.
+
 Why Coinbase moves first, whether news reaches its traders first or Kraken is slower to
 update its quotes, is a separate question that prices alone cannot answer. And the forecast
 is of the mid-price, before fees, the spread or fills, so it is not a trading result.
@@ -76,6 +80,9 @@ uv run jupyter nbconvert --execute --to notebook --output-dir "$(mktemp -d)" \
 | `prices.parquet` | 1,529,334 | both venues' mid at every one-second bar the real run kept: `date`, `ts_ns`, `coinbase_mid`, `kraken_mid` |
 | `prices_retimed.parquet` | 547,482 | the same bars on other clocks, each venue at the exchange's own stamp and Kraken moved 20 to 200ms earlier, kept only where a series differs from `prices.parquet`: `date`, `ts_ns`, `series`, `mid` |
 | `clocks.json` | | each venue's delay from its own stamp to arrival, by day, and the test of what that stamp marks |
+| `jump_paths.parquet` | 56,080 | both venues' mids around every jump, summed by day on a 10ms grid around the crossing, on both clocks: `date`, `leader`, `clock`, `ms`, `n`, `leader_sum`, `other_sum` |
+| `jump_crossings.parquet` | 46,281 | one row per jump: `date`, `ts_ns`, `leader`, `sign`, and where in its second the crossing fell on each clock |
+| `jump_events.parquet` | 3,265 | both books and trades, taker side, around the three jumps the essay draws |
 
 The `oos_*` files hold one row per non-overlapping test bar, from the walk-forward's test
 folds only. That is enough to recompute every headline number: pooled R2, hit rate and
@@ -96,6 +103,11 @@ both.
 `prices_retimed.parquet` and `clocks.json` were read from crosstick's lake by
 `scripts/extract_clocks.py` and written by `scripts/export_clocks.py`, which refuses to write
 unless the arrival clock, rebuilt from the same tables, equals `prices.parquet` bit for bit.
+
+The `jump_*` files were read from crosstick's lake by `scripts/extract_jumps.py` and written
+by `scripts/export_jumps.py`. The extraction writes a jump only if the arrival clock it
+rebuilt returns the published mids at the jump's own bars, and the export refuses to write
+unless the jumps are exactly those the essay's rule finds in `prices.parquet`.
 
 ## How the numbers were produced
 

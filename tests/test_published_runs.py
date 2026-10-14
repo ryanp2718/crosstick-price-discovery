@@ -242,3 +242,67 @@ def test_the_clock_report_covers_every_date() -> None:
         assert sorted(report["venues"][venue]) == dates, venue
         for day in report["venues"][venue].values():
             assert day["stamp_test"]["matched"] > 0 and day["book_updates"] > 0
+
+
+# ---- inside the jump second ---------------------------------------------------------
+# Both books around every jump, read to the millisecond off crosstick's lake by
+# `scripts/extract_jumps.py`. The extraction held each jump's rebuilt arrival clock to the
+# published mids, which needs the lake. What the files alone can show is that they cover
+# exactly the jumps the essay's rule finds in `prices.parquet`, that the daily sums count
+# exactly the jumps with a crossing, and that the drawn events are the essay's draw.
+CROSSINGS = DATA / "jump_crossings.parquet"
+JUMP_PATHS = DATA / "jump_paths.parquet"
+JUMP_EVENTS = DATA / "jump_events.parquet"
+
+
+def essay_jumps() -> pl.DataFrame:
+    """Every move of 2 bp or more in one second, at either venue, with ten unbroken seconds
+    before it and fifteen after: the essay's rule, stated again rather than imported."""
+    prices = pl.read_parquet(PRICES).sort("ts_ns")
+    ts, day = prices["ts_ns"].to_numpy(), prices["date"].to_numpy()
+    logp = np.log(prices.select(["coinbase_mid", "kraken_mid"]).to_numpy()) * 1e4
+    follows = np.r_[False, (np.diff(ts) == 1_000_000_000) & (day[1:] == day[:-1])]
+    stretch = np.cumsum(~follows)
+    found = []
+    for k, leader in enumerate(("coinbase", "kraken")):
+        move = np.r_[np.nan, np.diff(logp[:, k])]
+        at = np.flatnonzero(follows & (np.abs(move) >= 2.0))
+        at = at[(at >= 10) & (at + 15 < len(logp))]
+        at = at[stretch[at - 10] == stretch[at + 15]]
+        found.append(pl.DataFrame({"date": day[at], "ts_ns": ts[at], "leader": leader,
+                                   "sign": np.sign(move[at]).astype(np.int64)}))
+    return pl.concat(found)
+
+
+def test_the_jump_files_cover_the_essays_jumps() -> None:
+    carried = json.loads(pq.read_schema(JUMP_PATHS).metadata[b"crosstick"])
+    assert carried["dates"] == record("real")["spec"]["dates"]
+    key = ["date", "ts_ns", "leader", "sign"]
+    crossings = pl.read_parquet(CROSSINGS)
+    assert crossings.select(key).sort(key).equals(essay_jumps().sort(key))
+    assert crossings["cross_arrival_ms"].null_count() == 0
+    assert crossings["cross_arrival_ms"].is_between(0, 1000, closed="right").all()
+
+
+def test_the_daily_paths_count_every_crossing() -> None:
+    paths = pl.read_parquet(JUMP_PATHS)
+    crossings = pl.read_parquet(CROSSINGS)
+    grid = paths.group_by("date", "leader", "clock").agg(pl.col("ms").sort(), pl.col("n").n_unique())
+    assert (grid["n"] == 1).all()
+    assert all(ms.to_list() == list(range(-2000, 5001, 10)) for ms in grid["ms"])
+    for (leader, clock), g in paths.group_by("leader", "clock"):
+        counted = crossings.filter(pl.col("leader") == leader)[f"cross_{clock}_ms"].is_not_null().sum()
+        assert g.unique("date")["n"].sum() == counted, (leader, clock)
+
+
+def test_the_drawn_events_are_the_essays_draw() -> None:
+    carried = json.loads(pq.read_schema(JUMP_PATHS).metadata[b"crosstick"])
+    coinbase = essay_jumps().filter(pl.col("leader") == "coinbase").sort("ts_ns")
+    pick = np.sort(np.random.default_rng(carried["event_seed"]).choice(coinbase.height, 3, replace=False))
+    drawn = [list(row) for row in coinbase[pick].select("date", "ts_ns").iter_rows()]
+    assert carried["events"] == drawn
+    events = pl.read_parquet(JUMP_EVENTS)
+    assert sorted(map(list, events.select("date", "jump_ts_ns").unique().iter_rows())) == drawn
+    for _, g in events.group_by("date", "jump_ts_ns"):
+        assert g["cross_ns"].n_unique() == 1
+        assert set(g.filter(pl.col("kind") == "book")["venue"]) == {"coinbase", "kraken"}
