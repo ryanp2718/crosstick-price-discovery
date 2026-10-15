@@ -2,4 +2,5 @@
 # rather than leave it to whoever cloned last.
 * text=auto eol=lf
 *.parquet binary
+*.ttf binary
 *.ipynb text eol=lf
