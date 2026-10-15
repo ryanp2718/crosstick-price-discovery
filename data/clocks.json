@@ -1,0 +1,1618 @@
+{
+ "shifts_ms": [
+  20,
+  40,
+  60,
+  80,
+  100,
+  150,
+  200
+ ],
+ "venues": {
+  "coinbase": {
+   "2026-06-27": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-06-27/part.parquet",
+      "size": 44342840,
+      "mtime_ns": 1785188755000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-06-27/part.parquet",
+      "size": 11212933,
+      "mtime_ns": 1785188753000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 15.996907,
+     "p50": 22.298706,
+     "p90": 33.1670804
+    },
+    "book_updates": 1390189,
+    "trade_delay_ms": {
+     "p10": 54.5986721,
+     "p50": 99.08173550000001,
+     "p90": 144.278335
+    },
+    "trades": 371284,
+    "quote_test": {
+     "buys_above_mid": 0.804237978810106,
+     "sells_below_mid": 0.8813761143114601
+    },
+    "stamp_test": {
+     "matched": 24696,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 45.42918400000001,
+      "p50": 81.8761805,
+      "p90": 307.0509285
+     }
+    }
+   },
+   "2026-06-28": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-06-28/part.parquet",
+      "size": 50119175,
+      "mtime_ns": 1785189993000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-06-28/part.parquet",
+      "size": 12375157,
+      "mtime_ns": 1785189991000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 17.0850538,
+     "p50": 24.168428,
+     "p90": 35.85167680000001
+    },
+    "book_updates": 1576915,
+    "trade_delay_ms": {
+     "p10": 58.1941435,
+     "p50": 103.1232015,
+     "p90": 149.44622500000003
+    },
+    "trades": 436952,
+    "quote_test": {
+     "buys_above_mid": 0.8242496831284812,
+     "sells_below_mid": 0.8499309324496712
+    },
+    "stamp_test": {
+     "matched": 40726,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 47.992051000000004,
+      "p50": 88.2391535,
+      "p90": 312.7126
+     }
+    }
+   },
+   "2026-06-29": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-06-29/part.parquet",
+      "size": 54818287,
+      "mtime_ns": 1785191702000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-06-29/part.parquet",
+      "size": 24382348,
+      "mtime_ns": 1785191701000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 21.2287315,
+     "p50": 26.965065,
+     "p90": 41.939311700000005
+    },
+    "book_updates": 1623422,
+    "trade_delay_ms": {
+     "p10": 67.15489110000001,
+     "p50": 115.3371005,
+     "p90": 168.9761866
+    },
+    "trades": 907362,
+    "quote_test": {
+     "buys_above_mid": 0.7411204937824956,
+     "sells_below_mid": 0.7899900091797574
+    },
+    "stamp_test": {
+     "matched": 105576,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 53.039004500000004,
+      "p50": 93.962642,
+      "p90": 303.2194445
+     }
+    }
+   },
+   "2026-06-30": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-06-30/part.parquet",
+      "size": 52160465,
+      "mtime_ns": 1785195640000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-06-30/part.parquet",
+      "size": 20443349,
+      "mtime_ns": 1785195638000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 20.250357299999997,
+     "p50": 25.679374000000003,
+     "p90": 36.81970050000001
+    },
+    "book_updates": 1626430,
+    "trade_delay_ms": {
+     "p10": 61.815822,
+     "p50": 107.21309,
+     "p90": 153.12774029999997
+    },
+    "trades": 771180,
+    "quote_test": {
+     "buys_above_mid": 0.7763901133979875,
+     "sells_below_mid": 0.7937863199547767
+    },
+    "stamp_test": {
+     "matched": 69774,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 48.211836600000005,
+      "p50": 82.997027,
+      "p90": 252.31926540000012
+     }
+    }
+   },
+   "2026-07-01": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-01/part.parquet",
+      "size": 54017937,
+      "mtime_ns": 1785230821000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-01/part.parquet",
+      "size": 26335400,
+      "mtime_ns": 1785230820000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 16.9805415,
+     "p50": 22.7632145,
+     "p90": 34.776287499999995
+    },
+    "book_updates": 1624106,
+    "trade_delay_ms": {
+     "p10": 62.793849200000004,
+     "p50": 110.025298,
+     "p90": 162.24380200000002
+    },
+    "trades": 999533,
+    "quote_test": {
+     "buys_above_mid": 0.7835974985174403,
+     "sells_below_mid": 0.8476771250793489
+    },
+    "stamp_test": {
+     "matched": 88285,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 54.980526999999995,
+      "p50": 93.471969,
+      "p90": 293.7840288000001
+     }
+    }
+   },
+   "2026-07-02": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-02/part.parquet",
+      "size": 53940595,
+      "mtime_ns": 1785201347000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-02/part.parquet",
+      "size": 20634554,
+      "mtime_ns": 1785201345000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 16.0323926,
+     "p50": 21.590178,
+     "p90": 28.793336
+    },
+    "book_updates": 1641097,
+    "trade_delay_ms": {
+     "p10": 59.232493,
+     "p50": 104.268418,
+     "p90": 150.531561
+    },
+    "trades": 732641,
+    "quote_test": {
+     "buys_above_mid": 0.7312846863428071,
+     "sells_below_mid": 0.8034940084779313
+    },
+    "stamp_test": {
+     "matched": 77918,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 52.1862154,
+      "p50": 88.318862,
+      "p90": 289.56082770000006
+     }
+    }
+   },
+   "2026-07-03": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-03/part.parquet",
+      "size": 52917521,
+      "mtime_ns": 1785203903000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-03/part.parquet",
+      "size": 16342851,
+      "mtime_ns": 1785203902000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 18.7779714,
+     "p50": 24.360608,
+     "p90": 32.0998144
+    },
+    "book_updates": 1629105,
+    "trade_delay_ms": {
+     "p10": 58.35585150000001,
+     "p50": 103.19574,
+     "p90": 149.2303449
+    },
+    "trades": 551162,
+    "quote_test": {
+     "buys_above_mid": 0.7927423293343242,
+     "sells_below_mid": 0.8721799509639325
+    },
+    "stamp_test": {
+     "matched": 53546,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 46.648589,
+      "p50": 85.3530975,
+      "p90": 315.6964125
+     }
+    }
+   },
+   "2026-07-04": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-04/part.parquet",
+      "size": 50283852,
+      "mtime_ns": 1785213877000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-04/part.parquet",
+      "size": 12797413,
+      "mtime_ns": 1785213874000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 19.520622,
+     "p50": 23.926789,
+     "p90": 35.275285
+    },
+    "book_updates": 1584231,
+    "trade_delay_ms": {
+     "p10": 57.6879098,
+     "p50": 104.421232,
+     "p90": 154.0797040000001
+    },
+    "trades": 414837,
+    "quote_test": {
+     "buys_above_mid": 0.8026822400367785,
+     "sells_below_mid": 0.8998893424036282
+    },
+    "stamp_test": {
+     "matched": 30507,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 46.0764734,
+      "p50": 86.669165,
+      "p90": 383.8321854000004
+     }
+    }
+   },
+   "2026-07-05": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-05/part.parquet",
+      "size": 49652012,
+      "mtime_ns": 1785208543000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-05/part.parquet",
+      "size": 12588680,
+      "mtime_ns": 1785208541000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 16.8771485,
+     "p50": 24.5277215,
+     "p90": 87.20464100000001
+    },
+    "book_updates": 1556106,
+    "trade_delay_ms": {
+     "p10": 58.921142,
+     "p50": 112.137571,
+     "p90": 212.344378
+    },
+    "trades": 413219,
+    "quote_test": {
+     "buys_above_mid": 0.7698224615998405,
+     "sells_below_mid": 0.893544151666933
+    },
+    "stamp_test": {
+     "matched": 30202,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 45.25092,
+      "p50": 86.6792745,
+      "p90": 387.05051890000004
+     }
+    }
+   },
+   "2026-07-06": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-06/part.parquet",
+      "size": 28292134,
+      "mtime_ns": 1785209211000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-06/part.parquet",
+      "size": 10370263,
+      "mtime_ns": 1785209209000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 15.950348100000001,
+     "p50": 21.303224999999998,
+     "p90": 50.6380196
+    },
+    "book_updates": 860904,
+    "trade_delay_ms": {
+     "p10": 57.928489500000005,
+     "p50": 106.3236445,
+     "p90": 168.3548681000003
+    },
+    "trades": 386762,
+    "quote_test": {
+     "buys_above_mid": 0.7038112089703573,
+     "sells_below_mid": 0.8543038257782251
+    },
+    "stamp_test": {
+     "matched": 34156,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 46.9736985,
+      "p50": 86.184101,
+      "p90": 308.30094299999996
+     }
+    }
+   },
+   "2026-07-10": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-10/part.parquet",
+      "size": 48702525,
+      "mtime_ns": 1785225716000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-10/part.parquet",
+      "size": 15920415,
+      "mtime_ns": 1785225714000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 19.4023735,
+     "p50": 27.5084985,
+     "p90": 46.271617
+    },
+    "book_updates": 1528936,
+    "trade_delay_ms": {
+     "p10": 63.690374,
+     "p50": 111.690486,
+     "p90": 165.053622
+    },
+    "trades": 561351,
+    "quote_test": {
+     "buys_above_mid": 0.7726367859081861,
+     "sells_below_mid": 0.8386709599450372
+    },
+    "stamp_test": {
+     "matched": 45442,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 48.640227200000005,
+      "p50": 84.12894449999999,
+      "p90": 287.33540960000005
+     }
+    }
+   },
+   "2026-07-11": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-11/part.parquet",
+      "size": 43809064,
+      "mtime_ns": 1785220270000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-11/part.parquet",
+      "size": 10714047,
+      "mtime_ns": 1785220267000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 18.0145409,
+     "p50": 29.451518999999998,
+     "p90": 73.43386279999999
+    },
+    "book_updates": 1388274,
+    "trade_delay_ms": {
+     "p10": 60.55745,
+     "p50": 111.765537,
+     "p90": 179.667365
+    },
+    "trades": 358141,
+    "quote_test": {
+     "buys_above_mid": 0.7691289085435171,
+     "sells_below_mid": 0.9171353365073429
+    },
+    "stamp_test": {
+     "matched": 15313,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 46.1222772,
+      "p50": 80.966271,
+      "p90": 256.234425
+     }
+    }
+   },
+   "2026-07-12": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-12/part.parquet",
+      "size": 36656170,
+      "mtime_ns": 1785220018000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-12/part.parquet",
+      "size": 10969870,
+      "mtime_ns": 1785220017000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 15.8141642,
+     "p50": 22.642555,
+     "p90": 28.8641204
+    },
+    "book_updates": 1164583,
+    "trade_delay_ms": {
+     "p10": 54.2203778,
+     "p50": 98.11837,
+     "p90": 142.46745840000003
+    },
+    "trades": 364765,
+    "quote_test": {
+     "buys_above_mid": 0.8606593637297464,
+     "sells_below_mid": 0.9088135388125881
+    },
+    "stamp_test": {
+     "matched": 16095,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 50.5567406,
+      "p50": 86.748308,
+      "p90": 260.6232638
+     }
+    }
+   },
+   "2026-07-13": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-13/part.parquet",
+      "size": 52268484,
+      "mtime_ns": 1785221939000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-13/part.parquet",
+      "size": 19563424,
+      "mtime_ns": 1785221936000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 14.0419886,
+     "p50": 17.383872,
+     "p90": 27.901339400000012
+    },
+    "book_updates": 1590145,
+    "trade_delay_ms": {
+     "p10": 58.514294,
+     "p50": 105.261976,
+     "p90": 156.43191600000003
+    },
+    "trades": 711089,
+    "quote_test": {
+     "buys_above_mid": 0.7444451604046607,
+     "sells_below_mid": 0.7730129776251736
+    },
+    "stamp_test": {
+     "matched": 71134,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 53.5954264,
+      "p50": 89.763616,
+      "p90": 258.2044282
+     }
+    }
+   },
+   "2026-07-14": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-14/part.parquet",
+      "size": 45381326,
+      "mtime_ns": 1785220937000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-14/part.parquet",
+      "size": 14498078,
+      "mtime_ns": 1785220935000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 9.200457,
+     "p50": 18.457203,
+     "p90": 34.185808
+    },
+    "book_updates": 1418081,
+    "trade_delay_ms": {
+     "p10": 51.4310818,
+     "p50": 97.036431,
+     "p90": 145.21070000000003
+    },
+    "trades": 510957,
+    "quote_test": {
+     "buys_above_mid": 0.7589826846432255,
+     "sells_below_mid": 0.8651682156294473
+    },
+    "stamp_test": {
+     "matched": 34686,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 49.815436500000004,
+      "p50": 83.37384750000001,
+      "p90": 235.7493525
+     }
+    }
+   },
+   "2026-07-15": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-15/part.parquet",
+      "size": 52195970,
+      "mtime_ns": 1785224903000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-15/part.parquet",
+      "size": 17432295,
+      "mtime_ns": 1785224901000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 20.0873388,
+     "p50": 26.091081,
+     "p90": 71.60080040000001
+    },
+    "book_updates": 1630715,
+    "trade_delay_ms": {
+     "p10": 62.9529895,
+     "p50": 113.887634,
+     "p90": 188.73783
+    },
+    "trades": 600982,
+    "quote_test": {
+     "buys_above_mid": 0.7762296931407943,
+     "sells_below_mid": 0.8575498171716885
+    },
+    "stamp_test": {
+     "matched": 50602,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 47.0561498,
+      "p50": 81.63715450000001,
+      "p90": 254.19154890000007
+     }
+    }
+   },
+   "2026-07-16": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-16/part.parquet",
+      "size": 51940843,
+      "mtime_ns": 1785224927000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-16/part.parquet",
+      "size": 15357495,
+      "mtime_ns": 1785224925000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 17.858776,
+     "p50": 24.793319,
+     "p90": 55.48129
+    },
+    "book_updates": 1615411,
+    "trade_delay_ms": {
+     "p10": 63.0541821,
+     "p50": 111.283663,
+     "p90": 171.0569782
+    },
+    "trades": 509148,
+    "quote_test": {
+     "buys_above_mid": 0.8013341255266285,
+     "sells_below_mid": 0.8534326312930545
+    },
+    "stamp_test": {
+     "matched": 44193,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 51.0273228,
+      "p50": 88.512444,
+      "p90": 293.6260472
+     }
+    }
+   },
+   "2026-07-17": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-17/part.parquet",
+      "size": 51663581,
+      "mtime_ns": 1785224809000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-17/part.parquet",
+      "size": 19692334,
+      "mtime_ns": 1785224806000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 21.6384766,
+     "p50": 29.6307115,
+     "p90": 60.356527
+    },
+    "book_updates": 1597670,
+    "trade_delay_ms": {
+     "p10": 69.99769380000001,
+     "p50": 117.13818599999999,
+     "p90": 170.3107586
+    },
+    "trades": 699254,
+    "quote_test": {
+     "buys_above_mid": 0.7487888963510185,
+     "sells_below_mid": 0.8486495118742935
+    },
+    "stamp_test": {
+     "matched": 57180,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 55.492836200000006,
+      "p50": 92.075231,
+      "p90": 293.87365079999995
+     }
+    }
+   },
+   "2026-07-18": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-18/part.parquet",
+      "size": 48625385,
+      "mtime_ns": 1785220252000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-18/part.parquet",
+      "size": 11825806,
+      "mtime_ns": 1785220250000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 24.112728399999998,
+     "p50": 36.562207,
+     "p90": 105.17463939999998
+    },
+    "book_updates": 1534964,
+    "trade_delay_ms": {
+     "p10": 66.1511294,
+     "p50": 118.614986,
+     "p90": 203.531187
+    },
+    "trades": 390618,
+    "quote_test": {
+     "buys_above_mid": 0.841594611429597,
+     "sells_below_mid": 0.948769681546744
+    },
+    "stamp_test": {
+     "matched": 11033,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 44.9121206,
+      "p50": 78.081941,
+      "p90": 243.74009080000013
+     }
+    }
+   },
+   "2026-07-26": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=coinbase/symbol=BTC-USD/date=2026-07-26/part.parquet",
+      "size": 32526002,
+      "mtime_ns": 1785212715000000000
+     },
+     {
+      "path": "silver/trades/exchange=coinbase/symbol=BTC-USD/date=2026-07-26/part.parquet",
+      "size": 4316150,
+      "mtime_ns": 1785212712000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 16.6148566,
+     "p50": 25.824645,
+     "p90": 77.71586700000006
+    },
+    "book_updates": 1042357,
+    "trade_delay_ms": {
+     "p10": 57.525716,
+     "p50": 107.973273,
+     "p90": 175.07368900000006
+    },
+    "trades": 149438,
+    "quote_test": {
+     "buys_above_mid": 0.8497499287361684,
+     "sells_below_mid": 0.8388873512316635
+    },
+    "stamp_test": {
+     "matched": 6132,
+     "equal": 0,
+     "gap_ms": {
+      "p10": 42.2921698,
+      "p50": 73.0112805,
+      "p90": 222.48559130000038
+     }
+    }
+   }
+  },
+  "kraken": {
+   "2026-06-27": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-06-27/part.parquet",
+      "size": 56184654,
+      "mtime_ns": 1785189825000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-06-27/part.parquet",
+      "size": 931475,
+      "mtime_ns": 1785189824000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 54.5933846,
+     "p50": 65.285086,
+     "p90": 89.17065219999999
+    },
+    "book_updates": 1991069,
+    "trade_delay_ms": {
+     "p10": 54.615258,
+     "p50": 64.9212,
+     "p90": 89.74068700000001
+    },
+    "trades": 32756,
+    "quote_test": {
+     "buys_above_mid": 0.9990111104647781,
+     "sells_below_mid": 0.9994217796337937
+    },
+    "stamp_test": {
+     "matched": 6451,
+     "equal": 4469,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 199.149
+     }
+    }
+   },
+   "2026-06-28": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-06-28/part.parquet",
+      "size": 87856354,
+      "mtime_ns": 1785191125000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-06-28/part.parquet",
+      "size": 1076319,
+      "mtime_ns": 1785191124000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 55.931495399999996,
+     "p50": 68.592035,
+     "p90": 94.98532039999999
+    },
+    "book_updates": 3160612,
+    "trade_delay_ms": {
+     "p10": 55.9946541,
+     "p50": 69.1421095,
+     "p90": 98.830604
+    },
+    "trades": 38012,
+    "quote_test": {
+     "buys_above_mid": 0.9998455518945635,
+     "sells_below_mid": 0.9997847495022332
+    },
+    "stamp_test": {
+     "matched": 8892,
+     "equal": 6315,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 253.31620000000007
+     }
+    }
+   },
+   "2026-06-29": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-06-29/part.parquet",
+      "size": 143859070,
+      "mtime_ns": 1785193691000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-06-29/part.parquet",
+      "size": 1525229,
+      "mtime_ns": 1785193689000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 56.9555977,
+     "p50": 69.3294385,
+     "p90": 104.06575839999998
+    },
+    "book_updates": 5164248,
+    "trade_delay_ms": {
+     "p10": 58.051495,
+     "p50": 71.8181305,
+     "p90": 111.2604945
+    },
+    "trades": 51596,
+    "quote_test": {
+     "buys_above_mid": 0.9992259762374704,
+     "sells_below_mid": 0.9989129168769655
+    },
+    "stamp_test": {
+     "matched": 15408,
+     "equal": 10635,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 303.81620000000004
+     }
+    }
+   },
+   "2026-06-30": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-06-30/part.parquet",
+      "size": 116016632,
+      "mtime_ns": 1785196982000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-06-30/part.parquet",
+      "size": 1574322,
+      "mtime_ns": 1785196981000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 55.830299,
+     "p50": 67.51327,
+     "p90": 99.69202
+    },
+    "book_updates": 4117051,
+    "trade_delay_ms": {
+     "p10": 56.305835,
+     "p50": 67.80532550000001,
+     "p90": 99.769878
+    },
+    "trades": 53010,
+    "quote_test": {
+     "buys_above_mid": 0.998829579712715,
+     "sells_below_mid": 0.9992746322788636
+    },
+    "stamp_test": {
+     "matched": 12804,
+     "equal": 8124,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 354.1629000000002
+     }
+    }
+   },
+   "2026-07-01": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-01/part.parquet",
+      "size": 128029959,
+      "mtime_ns": 1785231877000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-01/part.parquet",
+      "size": 1551922,
+      "mtime_ns": 1785231876000000000
+     }
+    ],
+    "reordered": 1,
+    "book_delay_ms": {
+     "p10": 56.146332,
+     "p50": 66.885652,
+     "p90": 97.279236
+    },
+    "book_updates": 4629711,
+    "trade_delay_ms": {
+     "p10": 57.465368,
+     "p50": 69.25613,
+     "p90": 108.581209
+    },
+    "trades": 52317,
+    "quote_test": {
+     "buys_above_mid": 0.9976771598946055,
+     "sells_below_mid": 0.9984237208707877
+    },
+    "stamp_test": {
+     "matched": 13520,
+     "equal": 8854,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 311.30410000000006
+     }
+    }
+   },
+   "2026-07-02": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-02/part.parquet",
+      "size": 114601861,
+      "mtime_ns": 1785203307000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-02/part.parquet",
+      "size": 1251966,
+      "mtime_ns": 1785203306000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 54.135262,
+     "p50": 64.130057,
+     "p90": 84.783811
+    },
+    "book_updates": 4073381,
+    "trade_delay_ms": {
+     "p10": 55.104759,
+     "p50": 65.148736,
+     "p90": 87.5740308
+    },
+    "trades": 42212,
+    "quote_test": {
+     "buys_above_mid": 0.9978666898863686,
+     "sells_below_mid": 0.9967780491607338
+    },
+    "stamp_test": {
+     "matched": 11284,
+     "equal": 7268,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 344.0042000000001
+     }
+    }
+   },
+   "2026-07-03": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-03/part.parquet",
+      "size": 92965891,
+      "mtime_ns": 1785205207000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-03/part.parquet",
+      "size": 1232373,
+      "mtime_ns": 1785205206000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 54.862824700000004,
+     "p50": 64.786752,
+     "p90": 85.38687039999999
+    },
+    "book_updates": 3347892,
+    "trade_delay_ms": {
+     "p10": 54.9407766,
+     "p50": 64.676666,
+     "p90": 85.10122650000004
+    },
+    "trades": 41034,
+    "quote_test": {
+     "buys_above_mid": 0.9986229146994019,
+     "sells_below_mid": 0.9992316557817903
+    },
+    "stamp_test": {
+     "matched": 8755,
+     "equal": 5598,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 411.9946000000002
+     }
+    }
+   },
+   "2026-07-04": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-04/part.parquet",
+      "size": 66934828,
+      "mtime_ns": 1785214763000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-04/part.parquet",
+      "size": 1018949,
+      "mtime_ns": 1785214761000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 55.919332100000005,
+     "p50": 65.073475,
+     "p90": 95.1089086
+    },
+    "book_updates": 2374860,
+    "trade_delay_ms": {
+     "p10": 55.7789816,
+     "p50": 64.863099,
+     "p90": 96.893236
+    },
+    "trades": 33685,
+    "quote_test": {
+     "buys_above_mid": 0.9999508430418326,
+     "sells_below_mid": 1.0
+    },
+    "stamp_test": {
+     "matched": 5386,
+     "equal": 3755,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 181.2595
+     }
+    }
+   },
+   "2026-07-05": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-05/part.parquet",
+      "size": 72740863,
+      "mtime_ns": 1785209626000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-05/part.parquet",
+      "size": 984258,
+      "mtime_ns": 1785209623000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 58.5546255,
+     "p50": 74.2947575,
+     "p90": 154.9558715
+    },
+    "book_updates": 2576326,
+    "trade_delay_ms": {
+     "p10": 59.323404599999996,
+     "p50": 74.404142,
+     "p90": 155.710687
+    },
+    "trades": 33005,
+    "quote_test": {
+     "buys_above_mid": 0.9994578610152784,
+     "sells_below_mid": 0.9992134654711342
+    },
+    "stamp_test": {
+     "matched": 6012,
+     "equal": 4001,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 287.12270000000007
+     }
+    }
+   },
+   "2026-07-06": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-06/part.parquet",
+      "size": 54774311,
+      "mtime_ns": 1785209968000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-06/part.parquet",
+      "size": 706106,
+      "mtime_ns": 1785209965000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 56.4763606,
+     "p50": 68.969898,
+     "p90": 119.93588640000002
+    },
+    "book_updates": 1999105,
+    "trade_delay_ms": {
+     "p10": 57.5239996,
+     "p50": 70.825804,
+     "p90": 121.23470599999993
+    },
+    "trades": 23318,
+    "quote_test": {
+     "buys_above_mid": 0.9985981693741238,
+     "sells_below_mid": 0.9991064248056474
+    },
+    "stamp_test": {
+     "matched": 4872,
+     "equal": 3513,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 253.5070000000002
+     }
+    }
+   },
+   "2026-07-10": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-10/part.parquet",
+      "size": 65163263,
+      "mtime_ns": 1785226455000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-10/part.parquet",
+      "size": 1166528,
+      "mtime_ns": 1785226453000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 58.9982627,
+     "p50": 70.453476,
+     "p90": 100.36391940000007
+    },
+    "book_updates": 2381874,
+    "trade_delay_ms": {
+     "p10": 59.5844484,
+     "p50": 71.364632,
+     "p90": 100.962933
+    },
+    "trades": 39387,
+    "quote_test": {
+     "buys_above_mid": 0.9990000416649306,
+     "sells_below_mid": 0.9981801637852593
+    },
+    "stamp_test": {
+     "matched": 7317,
+     "equal": 4988,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 85.62120000000046
+     }
+    }
+   },
+   "2026-07-11": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-11/part.parquet",
+      "size": 29436084,
+      "mtime_ns": 1785220835000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-11/part.parquet",
+      "size": 707065,
+      "mtime_ns": 1785220834000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 61.3496518,
+     "p50": 77.383638,
+     "p90": 135.3732074000001
+    },
+    "book_updates": 1006043,
+    "trade_delay_ms": {
+     "p10": 61.29164,
+     "p50": 76.311307,
+     "p90": 126.81165
+    },
+    "trades": 23663,
+    "quote_test": {
+     "buys_above_mid": 0.99950873745526,
+     "sells_below_mid": 0.9998937752283833
+    },
+    "stamp_test": {
+     "matched": 2551,
+     "equal": 2035,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 14.803
+     }
+    }
+   },
+   "2026-07-12": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-12/part.parquet",
+      "size": 33288991,
+      "mtime_ns": 1785220560000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-12/part.parquet",
+      "size": 635421,
+      "mtime_ns": 1785220558000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 51.103785800000004,
+     "p50": 62.062064,
+     "p90": 77.892042
+    },
+    "book_updates": 1176187,
+    "trade_delay_ms": {
+     "p10": 50.924296,
+     "p50": 61.634754,
+     "p90": 76.3608455
+    },
+    "trades": 21836,
+    "quote_test": {
+     "buys_above_mid": 1.0,
+     "sells_below_mid": 0.9996589746504491
+    },
+    "stamp_test": {
+     "matched": 2926,
+     "equal": 2331,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 10.218
+     }
+    }
+   },
+   "2026-07-13": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-13/part.parquet",
+      "size": 86896169,
+      "mtime_ns": 1785222989000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-13/part.parquet",
+      "size": 1404825,
+      "mtime_ns": 1785222987000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 48.2973197,
+     "p50": 58.295432500000004,
+     "p90": 83.2365674
+    },
+    "book_updates": 3125592,
+    "trade_delay_ms": {
+     "p10": 49.4344977,
+     "p50": 59.684342,
+     "p90": 86.204534
+    },
+    "trades": 52454,
+    "quote_test": {
+     "buys_above_mid": 0.9992728531855956,
+     "sells_below_mid": 0.999618223466531
+    },
+    "stamp_test": {
+     "matched": 9586,
+     "equal": 7535,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 19.758
+     }
+    }
+   },
+   "2026-07-14": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-14/part.parquet",
+      "size": 57872501,
+      "mtime_ns": 1785221734000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-14/part.parquet",
+      "size": 1074327,
+      "mtime_ns": 1785221732000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 39.930162,
+     "p50": 56.189858,
+     "p90": 82.4621182
+    },
+    "book_updates": 2075079,
+    "trade_delay_ms": {
+     "p10": 34.87072,
+     "p50": 55.151885,
+     "p90": 77.07140039999999
+    },
+    "trades": 39340,
+    "quote_test": {
+     "buys_above_mid": 0.9994453431938988,
+     "sells_below_mid": 0.998136014460009
+    },
+    "stamp_test": {
+     "matched": 5915,
+     "equal": 4688,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 11.487600000000004
+     }
+    }
+   },
+   "2026-07-15": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-15/part.parquet",
+      "size": 61375754,
+      "mtime_ns": 1785225673000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-15/part.parquet",
+      "size": 1317682,
+      "mtime_ns": 1785225671000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 56.6949906,
+     "p50": 70.2105675,
+     "p90": 129.2344932
+    },
+    "book_updates": 2275964,
+    "trade_delay_ms": {
+     "p10": 57.5001546,
+     "p50": 71.730652,
+     "p90": 130.483666
+    },
+    "trades": 48077,
+    "quote_test": {
+     "buys_above_mid": 0.9989367942513565,
+     "sells_below_mid": 0.9991346569876448
+    },
+    "stamp_test": {
+     "matched": 7330,
+     "equal": 5637,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 20.6861
+     }
+    }
+   },
+   "2026-07-16": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-16/part.parquet",
+      "size": 74774078,
+      "mtime_ns": 1785225779000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-16/part.parquet",
+      "size": 1207666,
+      "mtime_ns": 1785225778000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 54.3462518,
+     "p50": 64.316745,
+     "p90": 103.76271860000001
+    },
+    "book_updates": 2712439,
+    "trade_delay_ms": {
+     "p10": 55.2477264,
+     "p50": 66.046269,
+     "p90": 105.68431740000004
+    },
+    "trades": 44569,
+    "quote_test": {
+     "buys_above_mid": 0.9988791930189737,
+     "sells_below_mid": 0.999795782917241
+    },
+    "stamp_test": {
+     "matched": 6869,
+     "equal": 5283,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 18.98159999999999
+     }
+    }
+   },
+   "2026-07-17": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-17/part.parquet",
+      "size": 81785740,
+      "mtime_ns": 1785225704000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-17/part.parquet",
+      "size": 1347419,
+      "mtime_ns": 1785225702000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 55.185683,
+     "p50": 73.523445,
+     "p90": 113.43172720000003
+    },
+    "book_updates": 2982189,
+    "trade_delay_ms": {
+     "p10": 56.211606,
+     "p50": 74.301037,
+     "p90": 114.88066030000003
+    },
+    "trades": 50484,
+    "quote_test": {
+     "buys_above_mid": 0.998973124181155,
+     "sells_below_mid": 0.9984714292136853
+    },
+    "stamp_test": {
+     "matched": 9003,
+     "equal": 6701,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 23.907200000000017
+     }
+    }
+   },
+   "2026-07-18": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-18/part.parquet",
+      "size": 29549061,
+      "mtime_ns": 1785220816000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-18/part.parquet",
+      "size": 833236,
+      "mtime_ns": 1785220815000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 58.7999217,
+     "p50": 76.85405850000001,
+     "p90": 150.52188489999998
+    },
+    "book_updates": 1014900,
+    "trade_delay_ms": {
+     "p10": 59.404483,
+     "p50": 77.211105,
+     "p90": 153.040225
+    },
+    "trades": 30127,
+    "quote_test": {
+     "buys_above_mid": 0.9998330643815035,
+     "sells_below_mid": 1.0
+    },
+    "stamp_test": {
+     "matched": 3070,
+     "equal": 2085,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 28.30639999999996
+     }
+    }
+   },
+   "2026-07-26": {
+    "sources": [
+     {
+      "path": "silver/book_quality/exchange=kraken/symbol=BTC-USD/date=2026-07-26/part.parquet",
+      "size": 18280659,
+      "mtime_ns": 1785213101000000000
+     },
+     {
+      "path": "silver/trades/exchange=kraken/symbol=BTC-USD/date=2026-07-26/part.parquet",
+      "size": 511120,
+      "mtime_ns": 1785213100000000000
+     }
+    ],
+    "reordered": 0,
+    "book_delay_ms": {
+     "p10": 54.5247704,
+     "p50": 68.72504,
+     "p90": 129.84620200000003
+    },
+    "book_updates": 601853,
+    "trade_delay_ms": {
+     "p10": 54.284877,
+     "p50": 67.7590155,
+     "p90": 129.92663
+    },
+    "trades": 17390,
+    "quote_test": {
+     "buys_above_mid": 1.0,
+     "sells_below_mid": 1.0
+    },
+    "stamp_test": {
+     "matched": 2513,
+     "equal": 1678,
+     "gap_ms": {
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 33.01360000000003
+     }
+    }
+   }
+  }
+ },
+ "source_record": "record_real.json"
+}

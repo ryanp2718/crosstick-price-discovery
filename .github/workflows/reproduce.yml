@@ -45,14 +45,15 @@ jobs:
       # recomputed from the rows rather than read back out of the record.
       - run: uv run pytest -q
 
-      # Then the notebook itself, top to bottom. It asserts its own numbers against the
-      # run records as it goes, so any drift raises and nbconvert exits non-zero. Output
-      # goes to a throwaway copy: re-executing regenerates every execution count and
-      # every PNG, so diffing the committed notebook would fail on noise rather than on
-      # a number changing.
-      - name: execute the notebook
+      # Then both notebooks, top to bottom: the essay and its appendix. Each asserts the
+      # numbers its text quotes as it goes, and the appendix recomputes every published
+      # number against the run records, so any drift raises and nbconvert exits non-zero.
+      # Output goes to throwaway copies: re-executing regenerates every execution count
+      # and every PNG, so diffing the committed notebooks would fail on noise rather than
+      # on a number changing.
+      - name: execute the notebooks
         run: |
           uv run jupyter nbconvert --execute --to notebook \
             --ExecutePreprocessor.timeout=600 \
-            --output-dir "$RUNNER_TEMP" --output executed.ipynb \
-            notebooks/price-discovery.ipynb
+            --output-dir "$RUNNER_TEMP" \
+            notebooks/price-discovery.ipynb notebooks/appendix.ipynb

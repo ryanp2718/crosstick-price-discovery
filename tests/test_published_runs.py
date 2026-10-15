@@ -20,9 +20,12 @@ back would only prove the record is a file.
 import json
 from pathlib import Path
 
+import numpy as np
 import polars as pl
+import pyarrow.parquet as pq
 import pytest
 from research.export import EXPERIMENT
+from research.infoshare import information_shares
 from research.runs import read_oos
 from research.validation import confidence_intervals
 
@@ -167,3 +170,139 @@ def test_the_forward_result_is_flat_across_cuts() -> None:
     R2. That is the claim the sweep exists to make."""
     points = [sweep_r2("kraken", cut)[0] for cut in CUTS] + [REAL_R2[0]]
     assert max(points) - min(points) < 0.005, f"forward R2 moves across cuts: {points}"
+
+
+# ---- the price panel --------------------------------------------------------------
+# Both venues' mids at every one-second bar the real run's VECM was fitted on, exported
+# from the feature cache by `scripts/export_prices.py`. A price file could be any prices,
+# so it is held to the run twice: by the provenance it carries, and by refitting the
+# information shares from it and getting the published estimates back.
+PRICES = DATA / "prices.parquet"
+
+
+def test_the_prices_are_the_real_runs_rows() -> None:
+    carried = json.loads(pq.read_schema(PRICES).metadata[b"crosstick"])
+    real = record("real")
+    assert carried["source_record"] == "record_real.json"
+    for field in ("git_sha", "builder_fingerprint", "source_fingerprints"):
+        assert carried[field] == real["provenance"][field], field
+    assert carried["target"] == real["spec"]["target"]
+    assert carried["max_age_ms"] == real["spec"]["max_age_ms"]
+    assert pl.read_parquet(PRICES).height == real["n_rows"]
+
+
+def test_the_prices_reproduce_the_published_information_shares() -> None:
+    """Every date at every stride, refitted with crosstick's own estimator."""
+    real = record("real")
+    venues = tuple(real["spec"]["infoshare_venues"])
+    prices = pl.read_parquet(PRICES)
+    for block in real["infoshare"]:
+        for want in block["estimates"]:
+            day = prices.filter(pl.col("date") == want["date"]).sort("ts_ns")
+            panel = np.log(day.select([f"{v}_mid" for v in venues]).to_numpy())
+            got = information_shares(panel[:: block["stride"]], venues, block["lags"])
+            where = f"{want['date']} at {block['stride']}s"
+            assert got.n == want["n"], where
+            assert got.alpha == pytest.approx(want["alpha"], rel=1e-9), where
+            assert got.bounds.ravel() == pytest.approx(np.ravel(want["bounds"]), abs=1e-9), where
+
+
+# ---- the other clocks -------------------------------------------------------------
+# The same bars timed otherwise, read off crosstick's lake by `scripts/extract_clocks.py`.
+# The export already held the rebuilt arrival clock to `prices.parquet` bit for bit, which
+# needs the lake. What the files alone can show is that every re-timed row sits on a
+# published bar and changes it, so a series is the published panel with these rows swapped
+# in, and that the clock report covers every date of the run.
+RETIMED = DATA / "prices_retimed.parquet"
+CLOCKS = DATA / "clocks.json"
+
+
+def test_the_retimed_prices_sit_on_the_published_bars() -> None:
+    carried = json.loads(pq.read_schema(RETIMED).metadata[b"crosstick"])
+    real = record("real")
+    assert carried["source_record"] == "record_real.json"
+    assert carried["git_sha"] == real["provenance"]["git_sha"]
+    assert carried["dates"] == real["spec"]["dates"]
+
+    retimed = pl.read_parquet(RETIMED)
+    assert set(retimed["series"].unique()) == set(carried["series"])
+    assert not retimed.select("series", "ts_ns").is_duplicated().any()
+    joined = retimed.join(pl.read_parquet(PRICES), on=["date", "ts_ns"], how="left")
+    assert joined["coinbase_mid"].null_count() == 0, "a re-timed row is not a published bar"
+    venue_mid = pl.when(pl.col("series").str.starts_with("coinbase"))
+    published = venue_mid.then(pl.col("coinbase_mid")).otherwise(pl.col("kraken_mid"))
+    assert joined.filter(pl.col("mid") == published).is_empty(), "a re-timed row changes nothing"
+
+
+def test_the_clock_report_covers_every_date() -> None:
+    report = json.loads(CLOCKS.read_text(encoding="utf-8"))
+    dates = record("real")["spec"]["dates"]
+    assert report["source_record"] == "record_real.json"
+    for venue in ("coinbase", "kraken"):
+        assert sorted(report["venues"][venue]) == dates, venue
+        for day in report["venues"][venue].values():
+            assert day["stamp_test"]["matched"] > 0 and day["book_updates"] > 0
+
+
+# ---- inside the jump second ---------------------------------------------------------
+# Both books around every jump, read to the millisecond off crosstick's lake by
+# `scripts/extract_jumps.py`. The extraction held each jump's rebuilt arrival clock to the
+# published mids, which needs the lake. What the files alone can show is that they cover
+# exactly the jumps the essay's rule finds in `prices.parquet`, that the daily sums count
+# exactly the jumps with a crossing, and that the drawn events are the essay's draw.
+CROSSINGS = DATA / "jump_crossings.parquet"
+JUMP_PATHS = DATA / "jump_paths.parquet"
+JUMP_EVENTS = DATA / "jump_events.parquet"
+
+
+def essay_jumps() -> pl.DataFrame:
+    """Every move of 2 bp or more in one second, at either venue, with ten unbroken seconds
+    before it and fifteen after: the essay's rule, stated again rather than imported."""
+    prices = pl.read_parquet(PRICES).sort("ts_ns")
+    ts, day = prices["ts_ns"].to_numpy(), prices["date"].to_numpy()
+    logp = np.log(prices.select(["coinbase_mid", "kraken_mid"]).to_numpy()) * 1e4
+    follows = np.r_[False, (np.diff(ts) == 1_000_000_000) & (day[1:] == day[:-1])]
+    stretch = np.cumsum(~follows)
+    found = []
+    for k, leader in enumerate(("coinbase", "kraken")):
+        move = np.r_[np.nan, np.diff(logp[:, k])]
+        at = np.flatnonzero(follows & (np.abs(move) >= 2.0))
+        at = at[(at >= 10) & (at + 15 < len(logp))]
+        at = at[stretch[at - 10] == stretch[at + 15]]
+        found.append(pl.DataFrame({"date": day[at], "ts_ns": ts[at], "leader": leader,
+                                   "sign": np.sign(move[at]).astype(np.int64)}))
+    return pl.concat(found)
+
+
+def test_the_jump_files_cover_the_essays_jumps() -> None:
+    carried = json.loads(pq.read_schema(JUMP_PATHS).metadata[b"crosstick"])
+    assert carried["dates"] == record("real")["spec"]["dates"]
+    key = ["date", "ts_ns", "leader", "sign"]
+    crossings = pl.read_parquet(CROSSINGS)
+    assert crossings.select(key).sort(key).equals(essay_jumps().sort(key))
+    assert crossings["cross_arrival_ms"].null_count() == 0
+    assert crossings["cross_arrival_ms"].is_between(0, 1000, closed="right").all()
+
+
+def test_the_daily_paths_count_every_crossing() -> None:
+    paths = pl.read_parquet(JUMP_PATHS)
+    crossings = pl.read_parquet(CROSSINGS)
+    grid = paths.group_by("date", "leader", "clock").agg(pl.col("ms").sort(), pl.col("n").n_unique())
+    assert (grid["n"] == 1).all()
+    assert all(ms.to_list() == list(range(-2000, 5001, 10)) for ms in grid["ms"])
+    for (leader, clock), g in paths.group_by("leader", "clock"):
+        counted = crossings.filter(pl.col("leader") == leader)[f"cross_{clock}_ms"].is_not_null().sum()
+        assert g.unique("date")["n"].sum() == counted, (leader, clock)
+
+
+def test_the_drawn_events_are_the_essays_draw() -> None:
+    carried = json.loads(pq.read_schema(JUMP_PATHS).metadata[b"crosstick"])
+    coinbase = essay_jumps().filter(pl.col("leader") == "coinbase").sort("ts_ns")
+    pick = np.sort(np.random.default_rng(carried["event_seed"]).choice(coinbase.height, 3, replace=False))
+    drawn = [list(row) for row in coinbase[pick].select("date", "ts_ns").iter_rows()]
+    assert carried["events"] == drawn
+    events = pl.read_parquet(JUMP_EVENTS)
+    assert sorted(map(list, events.select("date", "jump_ts_ns").unique().iter_rows())) == drawn
+    for _, g in events.group_by("date", "jump_ts_ns"):
+        assert g["cross_ns"].n_unique() == 1
+        assert set(g.filter(pl.col("kind") == "book")["venue"]) == {"coinbase", "kraken"}

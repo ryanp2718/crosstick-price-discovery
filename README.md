@@ -5,37 +5,37 @@
 
 **Does one crypto exchange lead another, and by how much?** This repo answers that for
 BTC-USD on Coinbase and Kraken over 20 days of self-captured level-2 data, and it commits
-the out-of-sample predictions so the answer can be checked rather than taken on trust.
+the out-of-sample predictions and the prices so the answer can be checked rather than taken
+on trust.
 
-[**Read the notebook**](notebooks/price-discovery.ipynb) (renders on GitHub, no setup).
+[**Read the essay**](notebooks/price-discovery.ipynb), and the [appendix](notebooks/appendix.ipynb)
+for the checks behind it (both render on GitHub, no setup).
 
-Two measures, one predictive and one structural, agree that Coinbase leads:
+Three measurements agree that Coinbase leads, in the sense that its price moves first and
+Kraken's follows:
 
 | measure | value | what it says |
 | --- | --- | --- |
-| out-of-sample R2, Coinbase to Kraken, 5s horizon | **0.1035** [0.0908, 0.1120] | Coinbase order flow forecasts Kraken's next 5 seconds |
+| Kraken's move in the 10s after a Coinbase jump of 2bp or more | **91%** of Coinbase's (69% to 96% by day) | Kraken catches up to Coinbase's jumps |
+| out-of-sample R2, Coinbase to Kraken, 5s horizon | **0.1035** [0.0908, 0.1120] | Coinbase's order book forecasts Kraken's next 5 seconds |
 | the same experiment reversed, Kraken to Coinbase | **0.0108** [0.0081, 0.0144] | paired on the 12 shared dates, dR2 **0.0927** [0.0785, 0.1026] |
-| Hasbrouck information share, Coinbase (1s bars) | bound **[0.720, 0.997]** | Coinbase carries the permanent price innovation |
+| Hasbrouck information share, Coinbase (1s bars) | bounds **[0.754, 0.997]** | most of the lasting price change starts at Coinbase |
 
-The forecast is cross-venue by construction: the model is given Kraken's forward return as
-its target and none of Kraken's own book or flow as input, so it shares no term with what
-it is predicting. The reverse run is the same 20 days, same bars, same feature builder and
-same folds, with only the direction changed. That rules out the symmetric explanations, a
-shared latent factor or a pipeline leak, either of which would inflate both directions
-alike. It does not rule out "Kraken is simply the slower book": Kraken's mid moves on only
-21% of five-second bars against Coinbase's 59%, so that objection is a live one. Answering
-it takes the information share below, which asks which venue error-corrects toward the
-other rather than which one forecasts the other.
+Inside the jump second the order holds. Of the 7,438 seconds in which both prices jumped the
+same way, Coinbase's crossed 1bp first in **69%**, a median **63ms** ahead of Kraken's; on the
+exchanges' own stamps, the clock least favourable to Coinbase, **54%** and **14ms**.
 
-Run the same pipeline against a **target displaced by one hour** and it returns R2
-`-0.0001` [-0.0003, 0.0001]. That null is committed alongside the real result and CI
-asserts it still straddles zero, because a leakage-free pipeline is the only thing that
-makes the first number mean anything.
+Why Coinbase moves first, whether news reaches its traders first or Kraken is slower to
+update its quotes, is a separate question that prices alone cannot answer. And the forecast
+is of the mid-price, before fees, the spread or fills, so it is not a trading result.
 
-A second control tightens the staleness cut instead of the target. Requiring both books to
-be current within **200ms** rather than five seconds costs 46% of the bars and moves the
-forward result from `0.1035` to `0.1028`, with the asymmetry intact at every cut in
-between. Whatever the model is reading, it is not a stale book being played back.
+The forecast sees none of Kraken's own book or flow, so it shares no term with what it
+predicts. Two controls test it. With the target displaced by an hour, the same pipeline
+returns R2 `-0.0001` [-0.0003, 0.0001], and CI asserts it still straddles zero. Requiring
+both books to be current within **200ms** rather than five seconds keeps 54% of the bars
+and moves the forward result from `0.1035` to `0.1028`, with the asymmetry intact at every
+cut in between. The [appendix](notebooks/appendix.ipynb) has both in full, with the rest of
+the checks.
 
 Everything above regenerates from committed Parquet files. No database, no object store,
 no Docker, no 1.5 GB feature cache.
@@ -47,7 +47,7 @@ Install [uv](https://docs.astral.sh/uv/), then:
 ```bash
 uv sync --locked                                              # fetches Python 3.12 too
 uv run pytest -q                                              # the published-run gates
-uv run jupyter lab notebooks/price-discovery.ipynb            # read and re-run it
+uv run jupyter lab notebooks/                                 # read and re-run both
 ```
 
 `uv sync` reads `pyproject.toml` for what is required and `uv.lock` for the one exact
@@ -56,16 +56,16 @@ fails rather than re-resolving, so you either get that environment or a clear er
 There is nothing else to install: `.python-version` pins the interpreter and uv fetches
 it, so no system Python is involved.
 
-The notebook asserts its own headline numbers against the run records as it goes, so a
-number that drifts fails the notebook rather than quietly rendering. CI executes it top to
-bottom on a clean runner with no credentials and no platform running, which is what the
-reproduce badge tracks. It writes to a throwaway copy, since re-executing regenerates
-every execution count and every PNG and the committed notebook is the record:
+Both notebooks assert the numbers their text quotes as they go, and the appendix recomputes
+every number in the run records, so a number that drifts fails the notebook rather than
+quietly rendering. CI executes both top to bottom on a clean runner with no credentials and no
+platform running, which is what the reproduce badge tracks. It writes to throwaway copies,
+since re-executing regenerates every execution count and every PNG and the committed notebooks
+are the record:
 
 ```bash
-uv run jupyter nbconvert --execute --to notebook \
-  --output-dir "$(mktemp -d)" --output executed.ipynb \
-  notebooks/price-discovery.ipynb
+uv run jupyter nbconvert --execute --to notebook --output-dir "$(mktemp -d)" \
+  notebooks/price-discovery.ipynb notebooks/appendix.ipynb
 ```
 
 ## What is in `data/`
@@ -77,11 +77,37 @@ uv run jupyter nbconvert --execute --to notebook \
 | `oos_placebo.parquet` | 166,040 | the same, from the displaced-target run |
 | `record_*.json` | | each run apart from its rows: spec, provenance, fold metrics, intervals, information shares |
 | `freshness/record_*.json` | | six more runs varying only the staleness cut, records only |
+| `prices.parquet` | 1,529,334 | both venues' mid at every one-second bar the real run kept: `date`, `ts_ns`, `coinbase_mid`, `kraken_mid` |
+| `prices_retimed.parquet` | 547,482 | the same bars on other clocks, each venue at the exchange's own stamp and Kraken moved 20 to 200ms earlier, kept only where a series differs from `prices.parquet`: `date`, `ts_ns`, `series`, `mid` |
+| `clocks.json` | | each venue's delay from its own stamp to arrival, by day, and the test of what that stamp marks |
+| `jump_paths.parquet` | 56,080 | both venues' mids around every jump, summed by day on a 10ms grid around the crossing, on both clocks: `date`, `leader`, `clock`, `ms`, `n`, `leader_sum`, `other_sum` |
+| `jump_crossings.parquet` | 46,281 | one row per jump: `date`, `ts_ns`, `leader`, `sign`, and where in its second the crossing fell on each clock |
+| `jump_events.parquet` | 3,265 | both books and trades, taker side, around the three jumps the essay draws |
 
-One row per non-overlapping test bar, from the walk-forward's test folds only. That is
-enough to recompute every headline number: pooled R2, hit rate and gross edge with
-date-block bootstrap intervals, dead-zone precision, and the full coverage-matched
-selectivity curve. Training rows are not published and are not needed.
+The `oos_*` files hold one row per non-overlapping test bar, from the walk-forward's test
+folds only. That is enough to recompute every headline number: pooled R2, hit rate and
+gross edge with date-block bootstrap intervals, dead-zone precision, and the full
+coverage-matched selectivity curve. Training rows are not published and are not needed.
+
+`prices.parquet` is what the run's information shares were fitted on. It was exported from
+crosstick's local feature cache by `scripts/export_prices.py`, picking each date's cache entry
+by the source and builder fingerprints in the real run's record, and it carries those
+fingerprints in its own metadata. Refitting with crosstick's estimator returns every estimate
+in the record at every stride, which the tests assert.
+
+That estimator fits straight across holes in the recording, as if the prices on either side
+were one second apart. The essay and the appendix skip those steps instead, which moves the
+one-second bounds from the record's [0.720, 0.997] to [0.754, 0.997], and the appendix shows
+both.
+
+`prices_retimed.parquet` and `clocks.json` were read from crosstick's lake by
+`scripts/extract_clocks.py` and written by `scripts/export_clocks.py`, which refuses to write
+unless the arrival clock, rebuilt from the same tables, equals `prices.parquet` bit for bit.
+
+The `jump_*` files were read from crosstick's lake by `scripts/extract_jumps.py` and written
+by `scripts/export_jumps.py`. The extraction writes a jump only if the arrival clock it
+rebuilt returns the published mids at the jump's own bars, and the export refuses to write
+unless the jumps are exactly those the essay's rule finds in `prices.parquet`.
 
 ## How the numbers were produced
 
@@ -106,19 +132,5 @@ point-in-time from the predicting venue only. Target is the predicted venue's mi
 bars ahead. Walk forward with an 8-day minimum train and 3-day test blocks, 4 folds, no
 shuffling, an embargo at every boundary and early stopping on its own embargoed slice.
 Intervals are date-block bootstraps over the 12 test dates, because adjacent seconds are
-not independent draws.
-
-## What this does not claim
-
-The R2 is a forecast of mid-price return, not a trading result. `gross_bps_per_trade` is
-gross by name: no fees, no slippage, no queue position, and no allowance for the fact that
-a 5-second edge measured on a captured tape is not a 5-second edge measured through a real
-order gateway. Selectivity is reported at forced coverage to show where the signal
-concentrates, not to propose a strategy.
-
-Gonzalo-Granger component shares are computed and deliberately not quoted. Under the
-conditioning of this VECM they leave the unit interval on 6 of 20 dates, which is a known
-failure mode of the measure; Hasbrouck bounds are unaffected and are the number cited
-above.
-
-The window is 20 days of one instrument on two venues. It is a measurement, not a law.
+not independent draws. The information share is fitted on each day's one-second prices
+separately, using only the seconds whose ten seconds before have no hole in the recording.
