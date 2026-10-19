@@ -1,0 +1,75 @@
+name: pages
+
+# The essay and its appendix are read as prose and figures, so the site serves them rendered
+# without their code cells. GitHub's notebook viewer and nbviewer both ignore the notebook
+# metadata that hides a cell, so the code is left out at render time instead, and the
+# notebooks in the repo keep it for anyone checking the work. Pages are rendered from the
+# committed outputs, not re-executed: proving those outputs regenerate is reproduce's job.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.ref }}
+  # A deployment already under way finishes rather than being cancelled half-published.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    name: render the notebooks without their code
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      # The locked nbconvert, so the site uses the same template as a local render.
+      - run: uv sync --locked
+
+      - name: render
+        run: |
+          uv run jupyter nbconvert --to html --no-input --output-dir site \
+            notebooks/price-discovery.ipynb notebooks/appendix.ipynb
+          mv site/price-discovery.html site/index.html
+
+          # The notebooks link each other as .ipynb files, which the site does not serve.
+          sed -i -e 's/href="price-discovery\.ipynb"/href="index.html"/g' \
+                 -e 's/href="appendix\.ipynb"/href="appendix.html"/g' site/*.html
+          if grep -o 'href="[^"]*\.ipynb"' site/*.html; then exit 1; fi
+
+          # The template runs prose the full width of the window and breaks printed output
+          # mid-word. A reading measure, and wrapping output at spaces, fix both.
+          sed -i 's#</head>#<style>.jp-Notebook { max-width: 860px; margin: 0 auto; } .jp-OutputArea-output pre { word-break: normal; }</style></head>#' \
+            site/*.html
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+
+  deploy:
+    name: publish to GitHub Pages
+    needs: render
+    # Pages serves a private repository only on a paid plan. Until this one is public the
+    # render above still runs on every change, proving the pages build, and nothing deploys.
+    if: >-
+      github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      && !github.event.repository.private
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

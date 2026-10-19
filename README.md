@@ -8,8 +8,13 @@ BTC-USD on Coinbase and Kraken over 20 days of self-captured level-2 data, and i
 the out-of-sample predictions and the prices so the answer can be checked rather than taken
 on trust.
 
-[**Read the essay**](notebooks/price-discovery.ipynb), and the [appendix](notebooks/appendix.ipynb)
-for the checks behind it (both render on GitHub, no setup).
+[**Read the essay**](https://ryanp2718.github.io/crosstick-price-discovery/), and the
+[appendix](https://ryanp2718.github.io/crosstick-price-discovery/appendix.html) for the checks
+behind it. Those pages leave the code out; the notebooks with it are here
+([essay](notebooks/price-discovery.ipynb), [appendix](notebooks/appendix.ipynb)) and on
+nbviewer
+([essay](https://nbviewer.org/github/ryanp2718/crosstick-price-discovery/blob/main/notebooks/price-discovery.ipynb),
+[appendix](https://nbviewer.org/github/ryanp2718/crosstick-price-discovery/blob/main/notebooks/appendix.ipynb)).
 
 Three measurements agree that Coinbase leads, in the sense that its price moves first and
 Kraken's follows:
@@ -71,6 +76,9 @@ are the record:
 uv run jupyter nbconvert --execute --to notebook --output-dir "$(mktemp -d)" \
   notebooks/price-discovery.ipynb notebooks/appendix.ipynb
 ```
+
+A second workflow, `pages.yml`, renders both notebooks from their committed outputs with the
+code cells left out and publishes them as the pages linked above.
 
 ## What is in `data/`
 
