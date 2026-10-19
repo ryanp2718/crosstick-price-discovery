@@ -25,9 +25,13 @@ Inside the jump second the order holds. Of the 7,438 seconds in which both price
 same way, Coinbase's crossed 1bp first in **69%**, a median **63ms** ahead of Kraken's; on the
 exchanges' own stamps, the clock least favourable to Coinbase, **54%** and **14ms**.
 
-Why Coinbase moves first, whether news reaches its traders first or Kraken is slower to
-update its quotes, is a separate question that prices alone cannot answer. And the forecast
-is of the mid-price, before fees, the spread or fills, so it is not a trading result.
+Why Coinbase moves first is a separate question, and the essay ends on it. The lead holds at
+every hour: Coinbase's price jumps 76 times an hour on days US stocks trade against 25 on
+the others, yet Kraken covers 88% to 92% of a jump within ten seconds in every eight-hour
+block of UTC time. That counts against a lead that belongs to whichever traders are at work,
+but two venues' prices cannot say whether traders with news prefer Coinbase or Kraken's
+quotes are set by watching it. And the forecast is of the mid-price, before fees, the spread
+or fills, so it is not a trading result.
 
 The forecast sees none of Kraken's own book or flow, so it shares no term with what it
 predicts. Two controls test it. With the target displaced by an hour, the same pipeline
