@@ -35,6 +35,22 @@ jobs:
       # The locked nbconvert, so the site uses the same template as a local render.
       - run: uv sync --locked
 
+      # nbconvert writes an escaped \$ as a bare $, and MathJax then reads it as the start of
+      # a formula running to the next $ it finds. A cell that shows a dollar sign must hold
+      # no math, or the page prints the prose between them as one garbled formula.
+      - name: check no dollar sign opens a formula
+        run: |
+          uv run python - notebooks/price-discovery.ipynb notebooks/appendix.ipynb <<'EOF'
+          import re, sys, nbformat
+          bad = [f"{path}, cell {k}" for path in sys.argv[1:]
+                 for k, c in enumerate(nbformat.read(path, as_version=4).cells)
+                 if c.cell_type == "markdown" and "\\$" in c.source
+                 and re.search(r"(?<!\\)\$", c.source)]
+          for b in bad:
+              print(f"a dollar sign beside math in {b}")
+          sys.exit(bool(bad))
+          EOF
+
       - name: render
         run: |
           uv run jupyter nbconvert --to html --no-input --output-dir site \
