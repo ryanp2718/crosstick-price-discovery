@@ -32,10 +32,10 @@ dependencies = [
 # opens it, ipykernel is the kernel both drive.
 [dependency-groups]
 dev = [
-    "pytest==9.1.1",
+    "pytest==9.2.0",
     "nbconvert==7.17.2",
     "ipykernel==7.4.0",
-    "jupyterlab==4.6.4",
+    "jupyterlab==4.6.5",
 ]
 
 [tool.uv]
